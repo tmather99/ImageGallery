@@ -1,0 +1,21 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/ImageGallery/FileContentIndex
+/ImageGallery.Authorization/bin/Debug/net7.0
+/ImageGallery.Authorization/obj/Debug
+/ImageGallery.Authorization/obj
+/ImageGallery.Client/bin/Debug
+/ImageGallery.Client/obj
+/ImageGallery.Model/bin/Debug
+/ImageGallery.Model/obj
+/Marvin.IDP/bin/Debug
+/Marvin.IDP/keys
+/Marvin.IDP/Migrations
+/Marvin.IDP/obj
+/barcelona_la_boqueria.jpg
+/.vs/ImageGallery/DesignTimeBuild
+/ImageGallery.API
+/.vs/ImageGallery
+/Marvin.IDP/MarvinIdentity.db-shm
