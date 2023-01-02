@@ -81,12 +81,7 @@ builder.Services.AddAuthorization(authorizationOptions =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsEnvironment("onebox"))
-{
-    app.UseExceptionHandler();
-    app.UseHsts();
-}
+app.UseHsts();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
