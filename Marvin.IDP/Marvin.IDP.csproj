@@ -15,11 +15,6 @@
     <None Remove="keys\**" />
     <None Remove="Migrations\**" />
   </ItemGroup>
-
-  <ItemGroup>
-    <None Remove="MarvinIdentity.db-shm" />
-    <None Remove="MarvinIdentity.db-wal" />
-  </ItemGroup>
   
   <ItemGroup>
     <PackageReference Include="Duende.IdentityServer" Version="6.2.0" />
