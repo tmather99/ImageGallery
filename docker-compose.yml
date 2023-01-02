@@ -8,13 +8,13 @@ services:
       dockerfile: Marvin.IDP/Dockerfile
 
   imagegallery.api:
-    image: ${DOCKER_REGISTRY}imagegallery-api:${VERSION}
+    image: ${DOCKER_REGISTRY}/imagegallery-api:${VERSION}
     build:
       context: .
       dockerfile: ImageGallery.API/Dockerfile
 
   imagegallery.client:
-    image: ${DOCKER_REGISTRY}imagegallery-client:${VERSION}
+    image: ${DOCKER_REGISTRY}/imagegallery-client:${VERSION}
     build:
       context: .
       dockerfile: ImageGallery.Client/Dockerfile
