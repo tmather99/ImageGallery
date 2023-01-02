@@ -33,7 +33,7 @@ JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
       // .AddJwtBearer(options =>
       // {
-      //     options.Authority = "https://localhost:5001";
+      //     options.Authority = "https://imagegallery.idp:5001";
       //     options.Audience = "imagegalleryapi";
       //     options.TokenValidationParameters = new ()
       //     {
@@ -44,7 +44,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
       // });
       .AddOAuth2Introspection(options =>
       {
-          options.Authority = "https://localhost:5001";
+          options.Authority = "https://idp.imagegallery.com:5001";
           options.ClientId = "imagegalleryapi";
           options.ClientSecret = "apisecret";
           options.NameClaimType = "given_name";

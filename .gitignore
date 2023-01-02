@@ -19,3 +19,6 @@
 /ImageGallery.API
 /.vs/ImageGallery
 /Marvin.IDP/MarvinIdentity.db-shm
+/obj
+/bin/Debug
+/.vs/ProjectEvaluation

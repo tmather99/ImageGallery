@@ -1,0 +1,56 @@
+version: '3.4'
+
+services:
+  imagegallery.idp:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Th@nhy99
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/idp-imagegallery.pfx
+    ports:
+      - "5001:443"
+    volumes:
+      - ./https:/https:ro
+    networks:
+      - imagegallery-network
+    extra_hosts:
+      - "idp.imagegallery.com: ${IDP_SERVER}"
+      - "api.imagegallery.com: ${API_SERVER}"
+      - "client.imagegallery.com: ${CLIENT_SERVER}"
+
+  imagegallery.api:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Th@nhy99
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/api-imagegallery.pfx
+    ports:
+      - "7075:443"
+    volumes:
+      - ./https:/https:ro
+    networks:
+      - imagegallery-network
+    extra_hosts:
+      - "idp.imagegallery.com: ${IDP_SERVER}"
+      - "api.imagegallery.com: ${API_SERVER}"
+      - "client.imagegallery.com: ${CLIENT_SERVER}"
+
+  imagegallery.client:
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=https://+:443
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Th@nhy99
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/client-imagegallery.pfx
+    ports:
+      - "7184:443"
+    volumes:
+      - ./https:/https:ro
+    networks:
+      - imagegallery-network
+    extra_hosts:
+      - "idp.imagegallery.com: ${IDP_SERVER}"
+      - "api.imagegallery.com: ${API_SERVER}"
+      - "client.imagegallery.com: ${CLIENT_SERVER}"
+
+networks:
+  imagegallery-network: {}

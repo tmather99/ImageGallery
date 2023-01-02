@@ -50,11 +50,11 @@ public static class Config
                 AccessTokenLifetime = 120,
                 RedirectUris =
                 {
-                    "https://localhost:7184/signin-oidc"
+                    "https://client.imagegallery.com:7184/signin-oidc"
                 },
                 PostLogoutRedirectUris =
                 {
-                    "https://localhost:7184/signout-callback-oidc"
+                    "https://client.imagegallery.com:7184/signout-callback-oidc"
                 },
                 AllowedScopes =
                 {

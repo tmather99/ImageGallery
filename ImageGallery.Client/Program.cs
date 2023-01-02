@@ -26,7 +26,7 @@ builder.Services.AddHttpClient("APIClient", client =>
 
 builder.Services.AddHttpClient("IDPClient", client =>
 {
-    client.BaseAddress = new Uri("https://localhost:5001/");
+    client.BaseAddress = new Uri("https://idp.imagegallery.com:5001/");
 });
 
 builder.Services.AddAuthentication(options =>
@@ -40,7 +40,7 @@ builder.Services.AddAuthentication(options =>
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     { 
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.Authority = "https://localhost:5001/";
+        options.Authority = "https://idp.imagegallery.com:5001/";
         options.ClientId = "imagegalleryclient";
         options.ClientSecret = "secret";
         options.ResponseType = "code";
@@ -82,7 +82,7 @@ builder.Services.AddAuthorization(authorizationOptions =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
+if (!app.Environment.IsEnvironment("onebox"))
 {
     app.UseExceptionHandler();
     app.UseHsts();
