@@ -1,0 +1,47 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: imagegallery-ingress  
+spec:
+  ingressClassName: nginx
+  tls:
+  - hosts:
+      - seq.local.com
+    secretName: seq-local-tls   
+  - hosts:
+      - zipkin.local.com
+    secretName: zipkin-local-tls   
+  - hosts:
+      - idp.imagegallery.com
+    secretName: idp-imagegallery-tls   
+  rules:
+  - host: seq.local.com
+    http:
+      paths:      
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: seq-service
+            port: 
+              number: 80  
+  - host: zipkin.local.com
+    http:
+      paths:      
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: zipkin-service
+            port: 
+              number: 9411  
+  - host: idp.imagegallery.com
+    http:
+      paths:      
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: imagegallery-idp-service
+            port: 
+              number: 5001  

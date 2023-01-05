@@ -1,14 +1,14 @@
 build:
 	docker compose build
 
+push:
+	docker compose push
+
 up:
 	docker compose up
 
 down:
 	docker compose down
-
-push:
-	docker push tmather99/imagegallery-idp:$(VERSION)
 
 run:
 	docker run -p 8083:8083 \

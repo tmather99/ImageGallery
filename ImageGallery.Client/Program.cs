@@ -26,7 +26,7 @@ builder.Services.AddHttpClient("APIClient", client =>
 
 builder.Services.AddHttpClient("IDPClient", client =>
 {
-    client.BaseAddress = new Uri("https://idp.imagegallery.com:5001/");
+    client.BaseAddress = new Uri(builder.Configuration["IdpServerUri"]);
 });
 
 builder.Services.AddAuthentication(options =>
@@ -40,7 +40,7 @@ builder.Services.AddAuthentication(options =>
     .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
     { 
         options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-        options.Authority = "https://idp.imagegallery.com:5001/";
+        options.Authority = builder.Configuration["IdpServerUri"];
         options.ClientId = "imagegalleryclient";
         options.ClientSecret = "secret";
         options.ResponseType = "code";

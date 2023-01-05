@@ -50,11 +50,11 @@ public static class Config
                 AccessTokenLifetime = 120,
                 RedirectUris =
                 {
-                    "https://client.imagegallery.com:7184/signin-oidc"
+                    //"https://client.imagegallery.com:7184/signin-oidc"
                 },
                 PostLogoutRedirectUris =
                 {
-                    "https://client.imagegallery.com:7184/signout-callback-oidc"
+                    //"https://client.imagegallery.com:7184/signout-callback-oidc"
                 },
                 AllowedScopes =
                 {
@@ -73,4 +73,26 @@ public static class Config
                 //RequireConsent = true
             }
         };
+
+    public static IEnumerable<Client> ConfigClients(this WebApplicationBuilder builder)
+    {
+        var redirectUris = builder.Configuration?.GetSection("Client")["RedirectUris"];
+        var postLogoutRedirectUris = builder.Configuration?.GetSection("Client")["PostLogoutRedirectUris"];
+
+        var client = Clients.First();
+        client.RedirectUris = new List<string>
+        {
+            redirectUris
+        };
+
+        client.PostLogoutRedirectUris = new List<string>
+        {
+            postLogoutRedirectUris
+        };
+
+        return new List<Client>
+        {
+            client
+        };
+    }
 }
