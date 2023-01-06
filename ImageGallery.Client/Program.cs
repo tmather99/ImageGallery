@@ -21,8 +21,11 @@ try
         .Enrich.FromLogContext()
         .ReadFrom.Configuration(ctx.Configuration));
 
-    Log.Information($"IdpServerUri = " + builder.Configuration["IdpServerUri"]);
-    Log.Information($"ImageGalleryAPIRoot = " + builder.Configuration["ImageGalleryAPIRoot"]);
+    var idpServerUri = builder.Configuration["IdpServerUri"];
+    var imageGalleryAPIRoot = builder.Configuration["ImageGalleryAPIRoot"];
+
+    Log.Information($"IdpServerUri = " + idpServerUri);
+    Log.Information($"ImageGalleryAPIRoot = " + imageGalleryAPIRoot);
 
     // Add services to the container.
     builder.Services.AddControllersWithViews()
@@ -36,14 +39,14 @@ try
     // create an HttpClient used for accessing the API
     builder.Services.AddHttpClient("APIClient", client =>
     {
-        client.BaseAddress = new Uri(builder.Configuration["ImageGalleryAPIRoot"]);
+        client.BaseAddress = new Uri(imageGalleryAPIRoot);
         client.DefaultRequestHeaders.Clear();
         client.DefaultRequestHeaders.Add(HeaderNames.Accept, "application/json");
     }).AddUserAccessTokenHandler();
 
     builder.Services.AddHttpClient("IDPClient", client =>
     {
-        client.BaseAddress = new Uri(builder.Configuration["IdpServerUri"]);
+        client.BaseAddress = new Uri(idpServerUri);
     });
 
     builder.Services.AddAuthentication(options =>

@@ -44,7 +44,8 @@ try
 
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
-    Log.Information($"IdpServerUri = " + builder.Configuration["IdpServerUri"]);
+    var idpServerUri = builder.Configuration["IdpServerUri"];
+    Log.Information($"IdpServerUri = " + idpServerUri);
 
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
           // .AddJwtBearer(options =>
@@ -60,7 +61,7 @@ try
           // });
           .AddOAuth2Introspection(options =>
           {
-              options.Authority = builder.Configuration["IdpServerUri"];
+              options.Authority = idpServerUri;
               options.ClientId = "imagegalleryapi";
               options.ClientSecret = "apisecret";
               options.NameClaimType = "given_name";
