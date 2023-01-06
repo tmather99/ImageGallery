@@ -50,7 +50,7 @@ spec:
           service:
             name: imagegallery-idp-service
             port: 
-              number: 443  
+              number: 5001  
   - host: api.imagegallery.com
     http:
       paths:      
@@ -60,7 +60,7 @@ spec:
           service:
             name: imagegallery-api-service
             port: 
-              number: 443  
+              number: 7075  
   - host: client.imagegallery.com
     http:
       paths:      
@@ -70,4 +70,4 @@ spec:
           service:
             name: imagegallery-client-service
             port: 
-              number: 443  
+              number: 7184  

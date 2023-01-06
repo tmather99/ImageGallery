@@ -60,7 +60,7 @@ try
         .AddOpenIdConnect(OpenIdConnectDefaults.AuthenticationScheme, options =>
         { 
             options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            options.Authority = builder.Configuration["IdpServerUri"];
+            options.Authority = idpServerUri;
             options.ClientId = "imagegalleryclient";
             options.ClientSecret = "secret";
             options.ResponseType = "code";
@@ -95,8 +95,7 @@ try
 
     builder.Services.AddAuthorization(authorizationOptions =>
     {
-        authorizationOptions.AddPolicy("UserCanAddImage",
-            AuthorizationPolicies.CanAddImage());
+        authorizationOptions.AddPolicy("UserCanAddImage", AuthorizationPolicies.CanAddImage());
     });
 
     var app = builder.Build();
