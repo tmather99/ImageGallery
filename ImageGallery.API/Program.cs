@@ -6,81 +6,107 @@ using ImageGallery.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
-var builder = WebApplication.CreateBuilder(args);
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
 
-// Add services to the container.
+Log.Information("Starting up");
 
-builder.Services.AddControllers()
-    .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNamingPolicy = null);
-
-builder.Services.AddDbContext<GalleryContext>(options =>
+try 
 {
-    options.UseSqlite(
-        builder.Configuration["ConnectionStrings:ImageGalleryDBConnectionString"]);
-});
+    var builder = WebApplication.CreateBuilder(args);
 
-// register the repository
-builder.Services.AddScoped<IGalleryRepository, GalleryRepository>();
-builder.Services.AddScoped<IAuthorizationHandler, MustOwnImageHandler>();
-builder.Services.AddHttpContextAccessor();
+    // Add services to the container.
 
-// register AutoMapper-related services
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+    builder.Host.UseSerilog((ctx, lc) => lc
+        .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
+        .Enrich.FromLogContext()
+        .ReadFrom.Configuration(ctx.Configuration));
 
-JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+    builder.Services.AddControllers()
+        .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNamingPolicy = null);
 
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-      // .AddJwtBearer(options =>
-      // {
-      //     options.Authority = builder.Configuration["IdpServerUri"];
-      //     options.Audience = "imagegalleryapi";
-      //     options.TokenValidationParameters = new ()
-      //     {
-      //         NameClaimType = "given_name",
-      //         RoleClaimType = "role",
-      //         ValidTypes = new[] { "at+jwt" }
-      //     };
-      // });
-      .AddOAuth2Introspection(options =>
-      {
-          options.Authority = builder.Configuration["IdpServerUri"];
-          options.ClientId = "imagegalleryapi";
-          options.ClientSecret = "apisecret";
-          options.NameClaimType = "given_name";
-          options.RoleClaimType = "role";
-      });
+    builder.Services.AddDbContext<GalleryContext>(options =>
+    {
+        options.UseSqlite(
+            builder.Configuration["ConnectionStrings:ImageGalleryDBConnectionString"]);
+    });
 
-builder.Services.AddAuthorization(authorizationOptions =>
+    // register the repository
+    builder.Services.AddScoped<IGalleryRepository, GalleryRepository>();
+    builder.Services.AddScoped<IAuthorizationHandler, MustOwnImageHandler>();
+    builder.Services.AddHttpContextAccessor();
+
+    // register AutoMapper-related services
+    builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+    JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+
+    Log.Information($"IdpServerUri = " + builder.Configuration["IdpServerUri"]);
+
+    builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+          // .AddJwtBearer(options =>
+          // {
+          //     options.Authority = builder.Configuration["IdpServerUri"];
+          //     options.Audience = "imagegalleryapi";
+          //     options.TokenValidationParameters = new ()
+          //     {
+          //         NameClaimType = "given_name",
+          //         RoleClaimType = "role",
+          //         ValidTypes = new[] { "at+jwt" }
+          //     };
+          // });
+          .AddOAuth2Introspection(options =>
+          {
+              options.Authority = builder.Configuration["IdpServerUri"];
+              options.ClientId = "imagegalleryapi";
+              options.ClientSecret = "apisecret";
+              options.NameClaimType = "given_name";
+              options.RoleClaimType = "role";
+          });
+
+    builder.Services.AddAuthorization(authorizationOptions =>
+    {
+        authorizationOptions.AddPolicy(
+            "UserCanAddImage", AuthorizationPolicies.CanAddImage());
+        authorizationOptions.AddPolicy(
+            "ClientApplicationCanWrite", policyBuilder =>
+            {
+                policyBuilder.RequireClaim("scope", "imagegalleryapi.write");
+            });
+        authorizationOptions.AddPolicy(
+            "MustOwnImage", policyBuilder =>
+            {
+                policyBuilder.RequireAuthenticatedUser();
+                policyBuilder.AddRequirements(new MustOwnImageRequirement());
+
+            });
+    });
+
+    var app = builder.Build();
+
+    // Configure the HTTP request pipeline.
+
+    app.UseHttpsRedirection();
+
+    app.UseStaticFiles();
+
+    app.UseAuthentication();
+
+    app.UseAuthorization();
+
+    app.MapControllers();
+
+    app.Run();
+}
+catch (Exception ex)
 {
-    authorizationOptions.AddPolicy(
-        "UserCanAddImage", AuthorizationPolicies.CanAddImage());
-    authorizationOptions.AddPolicy(
-        "ClientApplicationCanWrite", policyBuilder =>
-        {
-            policyBuilder.RequireClaim("scope", "imagegalleryapi.write");
-        });
-    authorizationOptions.AddPolicy(
-        "MustOwnImage", policyBuilder =>
-        {
-            policyBuilder.RequireAuthenticatedUser();
-            policyBuilder.AddRequirements(new MustOwnImageRequirement());
-
-        });
-});
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
-app.UseHttpsRedirection();
-
-app.UseStaticFiles();
-
-app.UseAuthentication();
-
-app.UseAuthorization();
-
-app.MapControllers();
-
-app.Run();
+    Log.Fatal(ex, "Unhandled exception");
+}
+finally
+{
+    Log.Information("Shut down complete");
+    Log.CloseAndFlush();
+}

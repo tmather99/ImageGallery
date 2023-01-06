@@ -19,35 +19,40 @@ spec:
         dapr.io/enable-metrics: "true"
         dapr.io/metrics-port: "9090"        
     spec:      
+      hostAliases:
+      - ip: "192.168.1.16"
+        hostnames:
+        - "idp.imagegallery.com"
+        - "api.imagegallery.com"
+        - "client.imagegallery.com"
       containers:
       - name: imagegallery-idp
         image: tmather99/imagegallery-idp:v1
-        volumeMounts:
-        - mountPath: /https
         ports:
-        - containerPort: 8083
+        - containerPort: 443
         resources:
           limits:
             memory: "128Mi"
             cpu: "200m"  
         imagePullPolicy: Always
+        env:
+          - name: SEQ_SERVER_URL
+            value: "http://seq-service"        
+          - name: ASPNETCORE_URLS
+            value: "http://+:443"        
+          - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+            value: "Th@nhy99"
+          - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+            value: "/app/idp-imagegallery.pfx"        
+          - name: Client__RedirectUris
+            value: "https://client.imagegallery.com/signin-oidc"
+          - name: Client__PostLogoutRedirectUris
+            value: "https://client.imagegallery.com/signout-callback-oidc"
       volumes:
-      - name: https
-        hostPath:
-          path: C:/github/ImageGallery/https
-          type: Directory
-      env:
-        - name: SEQ_SERVER_URL
-          value: "http://seq-service"        
-        - name: ASPNETCORE_URLS
-          value: "http://+:443"        
-        - name: ASPNETCORE_ENVIRONMENT
-          value: "Development"
-        - name: ASPNETCORE_Kestrel__Certificates__Default__Password
-          value: "Th@nhy99"
-        - name: ASPNETCORE_Kestrel__Certificates__Default__Path
-          value: "idp-imagegallery.pfx"        
-
+        - name: https-volume
+          hostPath:
+            path: C:/github/ImageGallery/https
+            type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -59,5 +64,5 @@ spec:
   type: ClusterIP  
   ports:
     - protocol: TCP 
-      port: 5001
-      targetPort: 5001
+      port: 443
+      targetPort: 443

@@ -14,6 +14,12 @@ spec:
   - hosts:
       - idp.imagegallery.com
     secretName: idp-imagegallery-tls   
+  - hosts:
+      - api.imagegallery.com
+    secretName: api-imagegallery-tls   
+  - hosts:
+      - client.imagegallery.com
+    secretName: client-imagegallery-tls   
   rules:
   - host: seq.local.com
     http:
@@ -44,4 +50,24 @@ spec:
           service:
             name: imagegallery-idp-service
             port: 
-              number: 5001  
+              number: 443  
+  - host: api.imagegallery.com
+    http:
+      paths:      
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: imagegallery-api-service
+            port: 
+              number: 443  
+  - host: client.imagegallery.com
+    http:
+      paths:      
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: imagegallery-client-service
+            port: 
+              number: 443  

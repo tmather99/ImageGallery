@@ -34,18 +34,51 @@ rm-zipkin:
 
 ingress:
 	kubectl apply -f imagegallery-ingress.yml
+	kubectl apply -f dapr-dashboard-ingress.yml
 	kubectl apply -f kd-ingress.yml
 
 rm-ingress:
 	kubectl delete -f imagegallery-ingress.yml
+	kubectl delete -f dapr-dashboard-ingress.yml
 	kubectl delete -f kd-ingress.yml
 
+idp:
+	kubectl apply -f imagegallery-idp.yml
+
+rm-idp:
+	kubectl delete -f imagegallery-idp.yml
+
+api:
+	kubectl apply -f imagegallery-api.yml
+
+rm-api:
+	kubectl delete -f imagegallery-api.yml
+
+client:
+	kubectl apply -f imagegallery-client.yml
+
+rm-client:
+	kubectl delete -f imagegallery-client.yml
+
+up: idp api client
+
+down: rm-idp rm-api rm-client
+
+# kubectl create namespace dapr-monitoring
 secrets:
+	kubectl create secret tls idp-imagegallery-tls --key="../https/idp-imagegallery.key" --cert="../https/idp-imagegallery.crt"
+	kubectl create secret tls api-imagegallery-tls --key="../https/api-imagegallery.key" --cert="../https/api-imagegallery.crt"
+	kubectl create secret tls client-imagegallery-tls --key="../https/client-imagegallery.key" --cert="../https/client-imagegallery.crt"
+	kubectl create secret tls dapr-local-tls --key="certs/dapr-local.key" --cert="certs/dapr-local.crt" -n dapr-system
 	kubectl create secret tls seq-local-tls --key="certs/seq-local.key" --cert="certs/seq-local.crt"
 	kubectl create secret tls zipkin-local-tls --key="certs/zipkin-local.key" --cert="certs/zipkin-local.crt"
 	kubectl -n kubernetes-dashboard create secret tls kd-local-tls --key="certs/kd-local.key" --cert="certs/kd-local.crt"
 
 rm-secrets:
+	kubectl delete secret idp-imagegallery-tls
+	kubectl delete secret api-imagegallery-tls
+	kubectl delete secret client-imagegallery-tls
+	kubectl delete secret dapr-local-tls -n dapr-system
 	kubectl delete secret seq-local-tls
 	kubectl delete secret zipkin-local-tls
 	kubectl delete secret -n kubernetes-dashboard kd-local-tls

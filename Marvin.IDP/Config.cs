@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
+using Serilog;
 
 namespace Marvin.IDP;
 
@@ -78,6 +79,9 @@ public static class Config
     {
         var redirectUris = builder.Configuration?.GetSection("Client")["RedirectUris"];
         var postLogoutRedirectUris = builder.Configuration?.GetSection("Client")["PostLogoutRedirectUris"];
+
+        Log.Information($"RedirectUris = " + redirectUris);
+        Log.Information($"PostLogoutRedirectUris = " + postLogoutRedirectUris);
 
         var client = Clients.First();
         client.RedirectUris = new List<string>

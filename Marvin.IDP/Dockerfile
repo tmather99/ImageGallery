@@ -20,6 +20,8 @@ FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 
+COPY ./https/idp-imagegallery.pfx .
+
 COPY ./https/client-imagegallery.crt /usr/share/ca-certificates
 RUN echo client-imagegallery.crt >> /etc/ca-certificates.conf
 RUN update-ca-certificates

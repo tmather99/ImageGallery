@@ -14,16 +14,22 @@ spec:
       annotations:
         dapr.io/enabled: "true"
         dapr.io/app-id: "imagegallery-api"
-        dapr.io/app-port: "8083"
+        dapr.io/app-port: "443"
         dapr.io/config: "tracing"
         dapr.io/enable-metrics: "true"
         dapr.io/metrics-port: "9090"        
     spec:      
+      hostAliases:
+      - ip: "192.168.1.16"
+        hostnames:
+        - "idp.imagegallery.com"
+        - "api.imagegallery.com"
+        - "client.imagegallery.com"
       containers:
       - name: imagegallery-api
         image: tmather99/imagegallery-api:v1
         ports:
-        - containerPort: 8083
+        - containerPort: 443
         resources:
           limits:
             memory: "128Mi"
@@ -33,13 +39,13 @@ spec:
         - name: SEQ_SERVER_URL
           value: "http://seq-service"        
         - name: ASPNETCORE_URLS
-          value: "http://*:8083"        
-        - name: ASPNETCORE_ENVIRONMENT
-          value: "Development"
-        - name: SECRET_STORE_NAME
-          value: "kubernetes"
-          
-
+          value: "http://+:443"        
+        - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+          value: "Th@nhy99"
+        - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+          value: "/app/api-imagegallery.pfx"                 
+        - name: IdpServerUri
+          value: "https://idp.imagegallery.com"
 ---
 apiVersion: v1
 kind: Service
@@ -51,5 +57,5 @@ spec:
   type: ClusterIP  
   ports:
     - protocol: TCP 
-      port: 8083
-      targetPort: 8083
+      port: 443
+      targetPort: 443
