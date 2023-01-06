@@ -1,7 +1,7 @@
 version: '3.4'
 
 services:
-  imagegallery.idp:
+  idp:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443
@@ -12,13 +12,13 @@ services:
     volumes:
       - ./https:/https:ro
     networks:
-      - imagegallery-network
+      - network
     extra_hosts:
       - "idp.imagegallery.com: ${IDP_SERVER}"
       - "api.imagegallery.com: ${API_SERVER}"
       - "client.imagegallery.com: ${CLIENT_SERVER}"
 
-  imagegallery.api:
+  api:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443
@@ -29,13 +29,13 @@ services:
     volumes:
       - ./https:/https:ro
     networks:
-      - imagegallery-network
+      - network
     extra_hosts:
       - "idp.imagegallery.com: ${IDP_SERVER}"
       - "api.imagegallery.com: ${API_SERVER}"
       - "client.imagegallery.com: ${CLIENT_SERVER}"
 
-  imagegallery.client:
+  client:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+:443
@@ -46,11 +46,11 @@ services:
     volumes:
       - ./https:/https:ro
     networks:
-      - imagegallery-network
+      - network
     extra_hosts:
       - "idp.imagegallery.com: ${IDP_SERVER}"
       - "api.imagegallery.com: ${API_SERVER}"
       - "client.imagegallery.com: ${CLIENT_SERVER}"
 
 networks:
-  imagegallery-network: {}
+  network: {}
