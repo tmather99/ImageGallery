@@ -37,8 +37,7 @@ internal static class HostingExtensions
 
         builder.Services.Configure<ForwardedHeadersOptions>(options =>
         {
-            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor
-                                       | ForwardedHeaders.XForwardedProto;
+            options.ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
         });
 
         return builder.Build();
@@ -46,8 +45,6 @@ internal static class HostingExtensions
     
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
-        app.UseForwardedHeaders();
-
         app.UseSerilogRequestLogging();
     
         if (app.Environment.IsDevelopment())

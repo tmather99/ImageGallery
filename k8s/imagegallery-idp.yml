@@ -39,11 +39,15 @@ spec:
           - name: SEQ_SERVER_URL
             value: "http://seq-service"        
           - name: ASPNETCORE_URLS
-            value: "http://+:5001"        
+            value: "https://*:5001"        
+          - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+            value: "Th@nhy99"
+          - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+            value: "/app/idp-imagegallery.pfx"        
           - name: Client__RedirectUris
-            value: "https://client.imagegallery.com/signin-oidc"
+            value: "https://client.imagegallery.com:7184/signin-oidc"
           - name: Client__PostLogoutRedirectUris
-            value: "https://client.imagegallery.com/signout-callback-oidc"
+            value: "https://client.imagegallery.com:7184/signout-callback-oidc"
       volumes:
         - name: https-volume
           hostPath:
@@ -57,7 +61,7 @@ metadata:
 spec:
   selector:
     app: imagegallery-idp-app  
-  type: ClusterIP  
+  type: LoadBalancer  
   ports:
     - protocol: TCP 
       port: 5001

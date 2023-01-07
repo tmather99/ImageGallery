@@ -10,6 +10,24 @@ up:
 down:
 	docker compose down
 
+idp:
+	docker compose up idp
+
+rm-idp:
+	docker compose stop idp
+
+api:
+	docker compose up api
+
+rm-api:
+	docker compose stop api
+
+client:
+	docker compose up client
+
+rm-client:
+	docker compose stop client
+
 run:
 	docker run -p 8083:8083 \
                -e ASPNETCORE_URLS=http://*:8083 \

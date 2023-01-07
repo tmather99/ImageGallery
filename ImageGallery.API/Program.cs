@@ -96,7 +96,7 @@ try
     app.UseSwaggerUI();
 
     // Configure the HTTP request pipeline.
-
+    app.UseHsts();
     app.UseHttpsRedirection();
 
     app.UseStaticFiles();

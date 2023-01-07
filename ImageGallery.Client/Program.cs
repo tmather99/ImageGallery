@@ -1,10 +1,12 @@
+using System.IdentityModel.Tokens.Jwt;
 using ImageGallery.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
+using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.IdentityModel.Logging;
 using Microsoft.Net.Http.Headers;
 using Serilog;
-using System.IdentityModel.Tokens.Jwt;
 
 Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
@@ -15,6 +17,13 @@ Log.Information("Starting up");
 try
 {
     var builder = WebApplication.CreateBuilder(args);
+
+    IdentityModelEventSource.ShowPII = true;
+
+    builder.Services.AddHttpLogging(options =>
+    {
+        options.LoggingFields = HttpLoggingFields.RequestPropertiesAndHeaders;
+    });
 
     builder.Host.UseSerilog((ctx, lc) => lc
         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
@@ -98,11 +107,30 @@ try
         authorizationOptions.AddPolicy("UserCanAddImage", AuthorizationPolicies.CanAddImage());
     });
 
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
     var app = builder.Build();
 
-    app.UseHsts();
+    app.Use(async (context, next) =>
+    {
+        context.Request.Scheme = "https";
 
+        // Connection: RemoteIp
+        Log.Information("Request RemoteIp: {RemoteIpAddress}", context.Connection.RemoteIpAddress);
+
+        await next(context);
+    });
+
+    app.UseForwardedHeaders();
+
+    app.UseSwagger();
+    app.UseSwaggerUI();
+
+    app.UseHsts();
     app.UseHttpsRedirection();
+
     app.UseStaticFiles();
 
     app.UseRouting();

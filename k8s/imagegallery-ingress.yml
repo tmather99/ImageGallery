@@ -11,15 +11,6 @@ spec:
   - hosts:
       - zipkin.local.com
     secretName: zipkin-local-tls   
-  - hosts:
-      - idp.imagegallery.com
-    secretName: idp-imagegallery-tls   
-  - hosts:
-      - api.imagegallery.com
-    secretName: api-imagegallery-tls   
-  - hosts:
-      - client.imagegallery.com
-    secretName: client-imagegallery-tls   
   rules:
   - host: seq.local.com
     http:
@@ -41,33 +32,3 @@ spec:
             name: zipkin-service
             port: 
               number: 9411  
-  - host: idp.imagegallery.com
-    http:
-      paths:      
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: imagegallery-idp-service
-            port: 
-              number: 5001  
-  - host: api.imagegallery.com
-    http:
-      paths:      
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: imagegallery-api-service
-            port: 
-              number: 7075  
-  - host: client.imagegallery.com
-    http:
-      paths:      
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: imagegallery-client-service
-            port: 
-              number: 7184  

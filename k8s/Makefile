@@ -2,6 +2,7 @@ VERSION = v1
 
 context:
 	kubectl config use-context docker-desktop
+	kubectl create namespace dapr-monitoring
 
 dashboard:
 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
@@ -66,18 +67,12 @@ down: rm-idp rm-api rm-client
 
 # kubectl create namespace dapr-monitoring
 secrets:
-	kubectl create secret tls idp-imagegallery-tls --key="../https/idp-imagegallery.key" --cert="../https/idp-imagegallery.crt"
-	kubectl create secret tls api-imagegallery-tls --key="../https/api-imagegallery.key" --cert="../https/api-imagegallery.crt"
-	kubectl create secret tls client-imagegallery-tls --key="../https/client-imagegallery.key" --cert="../https/client-imagegallery.crt"
 	kubectl create secret tls dapr-local-tls --key="certs/dapr-local.key" --cert="certs/dapr-local.crt" -n dapr-system
 	kubectl create secret tls seq-local-tls --key="certs/seq-local.key" --cert="certs/seq-local.crt"
 	kubectl create secret tls zipkin-local-tls --key="certs/zipkin-local.key" --cert="certs/zipkin-local.crt"
 	kubectl -n kubernetes-dashboard create secret tls kd-local-tls --key="certs/kd-local.key" --cert="certs/kd-local.crt"
 
 rm-secrets:
-	kubectl delete secret idp-imagegallery-tls
-	kubectl delete secret api-imagegallery-tls
-	kubectl delete secret client-imagegallery-tls
 	kubectl delete secret dapr-local-tls -n dapr-system
 	kubectl delete secret seq-local-tls
 	kubectl delete secret zipkin-local-tls
