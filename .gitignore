@@ -22,3 +22,5 @@
 /obj
 /bin/Debug
 /.vs/ProjectEvaluation
+/Marvin.IDP/bin/Release/net7.0
+/Marvin.IDP/db/MarvinIdentity.db
