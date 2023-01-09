@@ -38,3 +38,12 @@ run:
 
 stop:
 	docker stop imagegallery-idp
+
+build-sql:
+	docker compose build globosql
+
+sql:
+	docker compose up globosql
+
+rm-sql:
+	docker compose stop globosql

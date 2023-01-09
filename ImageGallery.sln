@@ -27,6 +27,15 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{75D1130A-C3D
 		k8s\zipkin.yml = k8s\zipkin.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mssql", "mssql", "{AB63C436-FC19-411B-B59F-292F927B5F4D}"
+	ProjectSection(SolutionItems) = preProject
+		mssql\Dockerfile = mssql\Dockerfile
+		mssql\entrypoint.sh = mssql\entrypoint.sh
+		mssql\InitializeGlobomanticsDb.sql = mssql\InitializeGlobomanticsDb.sql
+		mssql\setup.sh = mssql\setup.sh
+		mssql\wait-for-it.sh = mssql\wait-for-it.sh
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
