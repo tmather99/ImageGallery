@@ -6,27 +6,29 @@ services:
     build:
       context: .
       dockerfile: Marvin.IDP/Dockerfile
+    depends_on:
+      - globosql
 
   api:
     image: ${DOCKER_REGISTRY}/imagegallery-api:${VERSION}
     build:
       context: .
       dockerfile: ImageGallery.API/Dockerfile
+    depends_on:
+      - idp
 
   client:
     image: ${DOCKER_REGISTRY}/imagegallery-client:${VERSION}
     build:
       context: .
       dockerfile: ImageGallery.Client/Dockerfile
+    depends_on:
+      - idp
 
   globosql:
+    image: ${DOCKER_REGISTRY}/imagegallery-sql:${VERSION}
     build:
-      context: mssql
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: mssql/Dockerfile
     restart: always
-    ports:
-      - "1440:1433"   
-    environment:      
-      - ACCEPT_EULA=Y
-      - SA_PASSWORD=Th@nhy99
 

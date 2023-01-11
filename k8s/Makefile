@@ -61,7 +61,13 @@ client:
 rm-client:
 	kubectl delete -f imagegallery-client.yml
 
-up: idp api client
+sql:
+	kubectl apply -f imagegallery-sql.yml
+
+rm-sql:
+	kubectl delete -f imagegallery-sql.yml
+
+up: sql idp api client
 
 down: rm-idp rm-api rm-client
 

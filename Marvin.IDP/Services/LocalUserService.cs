@@ -13,10 +13,8 @@ namespace Marvin.IDP.Services
 
         public LocalUserService(IdentityDbContext context, IPasswordHasher<User> passwordHasher)
         {
-            _context = context ??
-                throw new ArgumentNullException(nameof(context));
-            _passwordHasher = passwordHasher ??
-                              throw new ArgumentNullException(nameof(passwordHasher));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _passwordHasher = passwordHasher ?? throw new ArgumentNullException(nameof(passwordHasher));
         }
 
         public async Task<bool> IsUserActive(string subject)
@@ -117,8 +115,7 @@ namespace Marvin.IDP.Services
             userToAdd.SecurityCodeExpirationDate = DateTime.UtcNow.AddHours(1);
 
             // hash & salt the password
-            userToAdd.Password =
-                _passwordHasher.HashPassword(userToAdd, password);
+            userToAdd.Password = _passwordHasher.HashPassword(userToAdd, password);
 
             _context.Users.Add(userToAdd);
         }

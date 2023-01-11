@@ -28,10 +28,16 @@ try
     builder.Services.AddControllers()
         .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNamingPolicy = null);
 
+    var connectionString = builder.Configuration["ConnectionStrings:GlobomanticsDb"];
+    Log.Information($"connectionString = " + connectionString);
+
+    var idpServerUri = builder.Configuration["IdpServerUri"];
+    Log.Information($"IdpServerUri = " + idpServerUri);
+
     builder.Services.AddDbContext<GalleryContext>(options =>
     {
-        options.UseSqlite(
-            builder.Configuration["ConnectionStrings:ImageGalleryDBConnectionString"]);
+        //options.UseSqlite(builder.Configuration["ConnectionStrings:ImageGalleryDBConnectionString"]);
+        options.UseSqlServer(connectionString);
     });
 
     // register the repository
@@ -43,9 +49,6 @@ try
     builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
-    var idpServerUri = builder.Configuration["IdpServerUri"];
-    Log.Information($"IdpServerUri = " + idpServerUri);
 
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
           // .AddJwtBearer(options =>
@@ -109,7 +112,7 @@ try
 
     app.Run();
 }
-catch (Exception ex)
+catch (Exception ex) when (ex.GetType().Name is not "HostAbortedException")
 {
     Log.Fatal(ex, "Unhandled exception");
 }

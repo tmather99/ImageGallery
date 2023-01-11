@@ -24,6 +24,7 @@ spec:
         hostnames:
         - "idp.imagegallery.com"
         - "api.imagegallery.com"
+        - "sql.imagegallery.com"
         - "client.imagegallery.com"
       containers:
       - name: imagegallery-client

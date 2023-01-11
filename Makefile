@@ -28,17 +28,6 @@ client:
 rm-client:
 	docker compose stop client
 
-run:
-	docker run -p 8083:8083 \
-               -e ASPNETCORE_URLS=http://*:8083 \
-               -e ASPNETCORE_ENVIRONMENT="Development" \
-               -e SEQ_SERVER_URL=$(SEQ_SERVER_URL) \
-			   --name imagegallery-idp \
-			   --rm tmather99/dapr_client 
-
-stop:
-	docker stop imagegallery-idp
-
 build-sql:
 	docker compose build globosql
 
@@ -47,3 +36,7 @@ sql:
 
 rm-sql:
 	docker compose stop globosql
+
+ef-update:
+	cd ./Marvin.IDP && dotnet ef database update
+	cd ./ImageGallery.API && dotnet ef database update

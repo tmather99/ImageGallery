@@ -31,7 +31,7 @@ namespace Marvin.IDP.DbContexts
                 new User()
                 {
                     Id = new Guid("13229d33-99e0-41b3-b18d-4f72127e3971"),
-                    Password = "password",
+                    Password = "AQAAAAIAAYagAAAAEAFskBbu4zvEs1wWYfoQoFnxrjb8Jmtr9fnP0YqE9GUswPywTSdaz20Muwz/zt3xSA==",
                     Subject = "d860efca-22d9-47fd-8249-791ba61b07c7",
                     UserName = "David",
                     Email = "david@someprovider.com",
@@ -40,7 +40,7 @@ namespace Marvin.IDP.DbContexts
                 new User()
                 {
                     Id = new Guid("96053525-f4a5-47ee-855e-0ea77fa6c55a"),
-                    Password = "password",
+                    Password = "AQAAAAIAAYagAAAAEAFskBbu4zvEs1wWYfoQoFnxrjb8Jmtr9fnP0YqE9GUswPywTSdaz20Muwz/zt3xSA==",
                     Subject = "b7539694-97e7-4dfe-84da-b4256e1ff5c7",
                     UserName = "Emma",
                     Email = "emma@someprovider.com",

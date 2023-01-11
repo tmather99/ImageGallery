@@ -16,6 +16,7 @@ services:
     extra_hosts:
       - "idp.imagegallery.com: ${IDP_SERVER}"
       - "api.imagegallery.com: ${API_SERVER}"
+      - "sql.imagegallery.com: ${SQL_SERVER}"
       - "client.imagegallery.com: ${CLIENT_SERVER}"
 
   api:
@@ -33,6 +34,7 @@ services:
     extra_hosts:
       - "idp.imagegallery.com: ${IDP_SERVER}"
       - "api.imagegallery.com: ${API_SERVER}"
+      - "sql.imagegallery.com: ${SQL_SERVER}"
       - "client.imagegallery.com: ${CLIENT_SERVER}"
 
   client:
@@ -50,7 +52,17 @@ services:
     extra_hosts:
       - "idp.imagegallery.com: ${IDP_SERVER}"
       - "api.imagegallery.com: ${API_SERVER}"
+      - "sql.imagegallery.com: ${SQL_SERVER}"
       - "client.imagegallery.com: ${CLIENT_SERVER}"
+
+  globosql:
+    environment:      
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Th@nhy99
+    ports:
+      - "1433:1433"   
+    networks:
+      - network
 
 networks:
   network: {}
