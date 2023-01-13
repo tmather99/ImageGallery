@@ -1,6 +1,7 @@
 ﻿using ImageGallery.API.DbContexts;
 using ImageGallery.API.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ImageGallery.API.Services
 {
@@ -26,6 +27,11 @@ namespace ImageGallery.API.Services
 
         public async Task<IEnumerable<Image>> GetImagesAsync(string ownerId)
         {
+            if (ownerId.IsNullOrEmpty())
+            {
+                return await _context.Images.OrderBy(i => i.Title).ToListAsync();
+            }
+
             return await _context.Images
                 .Where(i => i.OwnerId == ownerId)
                 .OrderBy(i => i.Title).ToListAsync();

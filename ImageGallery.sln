@@ -36,6 +36,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mssql", "mssql", "{AB63C436
 		mssql\wait-for-it.sh = mssql\wait-for-it.sh
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "https", "https", "{C6F6D5BD-677E-4AE5-94BB-260CB6964C56}"
+	ProjectSection(SolutionItems) = preProject
+		https\api-imagegallery.conf = https\api-imagegallery.conf
+		https\api-imagegallery.crt = https\api-imagegallery.crt
+		https\api-imagegallery.key = https\api-imagegallery.key
+		https\api-imagegallery.pfx = https\api-imagegallery.pfx
+		https\client-imagegallery.conf = https\client-imagegallery.conf
+		https\client-imagegallery.crt = https\client-imagegallery.crt
+		https\client-imagegallery.key = https\client-imagegallery.key
+		https\client-imagegallery.pfx = https\client-imagegallery.pfx
+		https\idp-imagegallery.conf = https\idp-imagegallery.conf
+		https\idp-imagegallery.crt = https\idp-imagegallery.crt
+		https\idp-imagegallery.key = https\idp-imagegallery.key
+		https\idp-imagegallery.pfx = https\idp-imagegallery.pfx
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeviceClient", "DeviceClient\DeviceClient.csproj", "{09284838-04F1-4DD5-A4E9-65ECFF5997B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +84,10 @@ Global
 		{D5A4A5B9-5137-4EE3-94E4-62E94767F43D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5A4A5B9-5137-4EE3-94E4-62E94767F43D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5A4A5B9-5137-4EE3-94E4-62E94767F43D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{09284838-04F1-4DD5-A4E9-65ECFF5997B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{09284838-04F1-4DD5-A4E9-65ECFF5997B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{09284838-04F1-4DD5-A4E9-65ECFF5997B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{09284838-04F1-4DD5-A4E9-65ECFF5997B4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

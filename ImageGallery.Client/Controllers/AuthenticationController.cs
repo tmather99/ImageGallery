@@ -14,8 +14,7 @@ namespace ImageGallery.Client.Controllers
 
         public AuthenticationController(IHttpClientFactory httpClientFactory)
         {
-            _httpClientFactory = httpClientFactory ??
-                throw new ArgumentNullException(nameof(httpClientFactory));
+            _httpClientFactory = httpClientFactory ?? throw new ArgumentNullException(nameof(httpClientFactory));
         }
 
         [Authorize]
@@ -57,7 +56,7 @@ namespace ImageGallery.Client.Controllers
                 throw new Exception(accessTokenRevocationResponse.Error);
             }
 
-            // Clears the  local cookie
+            // Clears the local cookie
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             // Redirects to the IDP linked to scheme

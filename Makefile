@@ -37,6 +37,7 @@ sql:
 rm-sql:
 	docker compose stop globosql
 
+# dotnet tool install --global dotnet-ef
 ef-update:
 	cd ./Marvin.IDP && dotnet ef database update
 	cd ./ImageGallery.API && dotnet ef database update

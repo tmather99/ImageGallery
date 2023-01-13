@@ -38,8 +38,7 @@ try
 
     // Add services to the container.
     builder.Services.AddControllersWithViews()
-        .AddJsonOptions(configure => 
-            configure.JsonSerializerOptions.PropertyNamingPolicy = null);
+        .AddJsonOptions(configure => configure.JsonSerializerOptions.PropertyNamingPolicy = null);
 
     JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 

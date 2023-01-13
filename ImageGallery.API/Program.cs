@@ -53,7 +53,7 @@ try
     builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
           // .AddJwtBearer(options =>
           // {
-          //     options.Authority = builder.Configuration["IdpServerUri"];
+          //     options.Authority = idpServerUri;
           //     options.Audience = "imagegalleryapi";
           //     options.TokenValidationParameters = new ()
           //     {

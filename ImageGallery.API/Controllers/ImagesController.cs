@@ -3,6 +3,7 @@ using ImageGallery.API.Services;
 using ImageGallery.Model;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace ImageGallery.API.Controllers
 {
@@ -20,21 +21,19 @@ namespace ImageGallery.API.Controllers
             IWebHostEnvironment hostingEnvironment,
             IMapper mapper)
         {
-            _galleryRepository = galleryRepository ?? 
-                throw new ArgumentNullException(nameof(galleryRepository));
-            _hostingEnvironment = hostingEnvironment ?? 
-                throw new ArgumentNullException(nameof(hostingEnvironment));
-            _mapper = mapper ?? 
-                throw new ArgumentNullException(nameof(mapper));
+            _galleryRepository = galleryRepository ?? throw new ArgumentNullException(nameof(galleryRepository));
+            _hostingEnvironment = hostingEnvironment ?? throw new ArgumentNullException(nameof(hostingEnvironment));
+            _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<Image>>> GetImages()
         {
             var ownerId = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
+
             if (ownerId == null)
             {
-                throw new Exception("User identifier is missing from token.");
+                Log.Information("User identifier is missing from token.");
             }
 
             // get from repo

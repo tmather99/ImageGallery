@@ -1,5 +1,6 @@
 ﻿using Duende.IdentityServer;
 using Duende.IdentityServer.Models;
+using Duende.IdentityServer.Stores;
 using Serilog;
 
 namespace Marvin.IDP;
@@ -35,10 +36,17 @@ public static class Config
             new ApiScope("imagegalleryapi.write")
         };
 
-    public static IEnumerable<Client> Clients =>
-        new Client[]
+    public static IEnumerable<Client> ConfigClients(this WebApplicationBuilder builder)
+    {
+        var redirectUris = builder.Configuration?.GetSection("Client")["RedirectUris"];
+        var postLogoutRedirectUris = builder.Configuration?.GetSection("Client")["PostLogoutRedirectUris"];
+
+        Log.Information($"RedirectUris = " + redirectUris);
+        Log.Information($"PostLogoutRedirectUris = " + postLogoutRedirectUris);
+
+        return new List<Client>
         {
-            new Client()
+            new Client
             {
                 ClientName = "Image Gallery",
                 ClientId = "imagegalleryclient",
@@ -51,10 +59,12 @@ public static class Config
                 AccessTokenLifetime = 120,
                 RedirectUris =
                 {
+                    redirectUris
                     //"https://client.imagegallery.com:7184/signin-oidc"
                 },
                 PostLogoutRedirectUris =
                 {
+                    postLogoutRedirectUris
                     //"https://client.imagegallery.com:7184/signout-callback-oidc"
                 },
                 AllowedScopes =
@@ -74,29 +84,19 @@ public static class Config
                 //RequireConsent = true
             }
         };
-
-    public static IEnumerable<Client> ConfigClients(this WebApplicationBuilder builder)
-    {
-        var redirectUris = builder.Configuration?.GetSection("Client")["RedirectUris"];
-        var postLogoutRedirectUris = builder.Configuration?.GetSection("Client")["PostLogoutRedirectUris"];
-
-        Log.Information($"RedirectUris = " + redirectUris);
-        Log.Information($"PostLogoutRedirectUris = " + postLogoutRedirectUris);
-
-        var client = Clients.First();
-        client.RedirectUris = new List<string>
-        {
-            redirectUris
-        };
-
-        client.PostLogoutRedirectUris = new List<string>
-        {
-            postLogoutRedirectUris
-        };
-
-        return new List<Client>
-        {
-            client
-        };
     }
+
+    /// <summary>
+    /// Adds the in memory clients.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="clients">The clients.</param>
+    /// <returns></returns>
+    public static IIdentityServerBuilder AddMyInMemoryClients(this IIdentityServerBuilder builder, IEnumerable<Client> clients)
+    {
+        builder.Services.AddSingleton(clients);
+        builder.AddClientStore<MyInMemoryClientStore>();
+        return builder;
+    }
+
 }

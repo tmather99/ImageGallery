@@ -36,7 +36,8 @@ internal static class HostingExtensions
             .AddInMemoryIdentityResources(Config.IdentityResources)
             .AddInMemoryApiScopes(Config.ApiScopes)
             .AddInMemoryApiResources(Config.ApiResources)
-            .AddInMemoryClients(builder.ConfigClients());
+            //.AddInMemoryClients(builder.ConfigClients())
+            .AddMyInMemoryClients(builder.ConfigClients());
 
         builder.Services.Configure<ForwardedHeadersOptions>(options =>
         {

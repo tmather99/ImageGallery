@@ -25,3 +25,11 @@
 /Marvin.IDP/bin/Release/net7.0
 /Marvin.IDP/db/MarvinIdentity.db
 /mssql/obj/Docker
+/NetCoreConsoleClient/obj
+/NetCoreConsoleClient/bin/Debug/net7.0
+/NativeConsolePKCEClient/bin/Debug
+/NativeConsolePKCEClient/obj
+/Client/obj
+/Client/bin/Debug/net7.0
+/DeviceClient/bin/Debug/net7.0
+/DeviceClient/obj
