@@ -1,6 +1,15 @@
 ﻿// discover endpoints from metadata
+using System.Collections.Specialized;
+using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http;
+using System.Security.Claims;
+using System.Text;
 using System.Text.Json;
+using IdentityModel;
 using IdentityModel.Client;
+using Microsoft.IdentityModel.Tokens;
+
+JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
 var deviceClient = new HttpClient();
 var disco = await deviceClient.GetDiscoveryDocumentAsync("https://idp.imagegallery.com:5001");
@@ -15,10 +24,11 @@ var tokenResponse = await deviceClient.RequestClientCredentialsTokenAsync(new Cl
 {
     Address = disco.TokenEndpoint,
 
-    ClientId = "client",
+    ClientId = "device-1",
     ClientSecret = "secret",
-    Scope = "imagegalleryapi.read imagegalleryapi.write"
-}); 
+    Scope = "imagegalleryapi.read imagegalleryapi.write",
+});
+
 
 if (tokenResponse.IsError)
 {
@@ -27,6 +37,13 @@ if (tokenResponse.IsError)
 }
 
 Console.WriteLine("Access Token: " + tokenResponse.AccessToken);
+
+var jwt = new JwtSecurityToken(tokenResponse.AccessToken);
+
+foreach (var claim in jwt.Claims)
+{
+    Console.WriteLine($"\t{claim.Type}: {claim.Value}");
+}
 
 // call api
 var apiClient = new HttpClient();

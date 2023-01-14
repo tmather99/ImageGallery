@@ -43,7 +43,7 @@ public class MyInMemoryClientStore : IClientStore
 
         var device = new Client
         {
-            ClientId = "client",
+            ClientId = "device-1",
             ClientName = "Client Crendential",
             ClientSecrets =
             {
@@ -54,6 +54,10 @@ public class MyInMemoryClientStore : IClientStore
             {
                 "imagegalleryapi.read",
                 "imagegalleryapi.write"
+            },
+            Claims = new List<ClientClaim>
+            {
+                new ClientClaim(type: "TenantId", value: "OG-1")
             }
         };
 

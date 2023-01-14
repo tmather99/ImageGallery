@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Text;
+using AutoMapper;
 using ImageGallery.API.Services;
 using ImageGallery.Model;
 using Microsoft.AspNetCore.Authorization;
@@ -29,6 +30,14 @@ namespace ImageGallery.API.Controllers
         [HttpGet()]
         public async Task<ActionResult<IEnumerable<Image>>> GetImages()
         {
+            var userClaimsStringBuilder = new StringBuilder();
+            foreach (var claim in User.Claims)
+            {
+                userClaimsStringBuilder.AppendLine($"{claim.Type}: {claim.Value}");
+            }
+
+            Log.Information($"{userClaimsStringBuilder}");
+
             var ownerId = User.Claims.FirstOrDefault(c => c.Type == "sub")?.Value;
 
             if (ownerId == null)
