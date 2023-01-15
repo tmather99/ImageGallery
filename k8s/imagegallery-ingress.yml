@@ -11,6 +11,12 @@ spec:
   - hosts:
       - zipkin.local.com
     secretName: zipkin-local-tls   
+  - hosts:
+      - redis.local.com
+    secretName: redis-local-tls   
+  - hosts:
+      - rabbitmq.local.com
+    secretName: rabbitmq-local-tls   
   rules:
   - host: seq.local.com
     http:
@@ -32,3 +38,23 @@ spec:
             name: zipkin-service
             port: 
               number: 9411  
+  - host: redis.local.com
+    http:
+      paths:      
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: redis-commander
+            port: 
+              number: 8081  
+  - host: rabbitmq.local.com
+    http:
+      paths:      
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: rabbitmq
+            port: 
+              number: 15672  

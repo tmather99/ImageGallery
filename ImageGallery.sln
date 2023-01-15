@@ -54,6 +54,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "https", "https", "{C6F6D5BD
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DeviceClient", "DeviceClient\DeviceClient.csproj", "{09284838-04F1-4DD5-A4E9-65ECFF5997B4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Dapr", "Dapr", "{A96FC416-C6CF-4EB1-B15F-AF44B4C993FD}"
+	ProjectSection(SolutionItems) = preProject
+		Dapr\config.yml = Dapr\config.yml
+		Dapr\prometheus.yml = Dapr\prometheus.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "components", "components", "{E9947EB2-37BA-438E-B27E-CAD83F48B695}"
+	ProjectSection(SolutionItems) = preProject
+		Dapr\components\configuration.yml = Dapr\components\configuration.yml
+		Dapr\components\cron.yml = Dapr\components\cron.yml
+		Dapr\components\email.yml = Dapr\components\email.yml
+		Dapr\components\localSecretStore.yml = Dapr\components\localSecretStore.yml
+		Dapr\components\pubsub.yaml = Dapr\components\pubsub.yaml
+		Dapr\components\secrets.json = Dapr\components\secrets.json
+		Dapr\components\stateStore.yml = Dapr\components\stateStore.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +108,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E9947EB2-37BA-438E-B27E-CAD83F48B695} = {A96FC416-C6CF-4EB1-B15F-AF44B4C993FD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {AD37E4F7-E149-4FB1-A40B-76F5402A3061}

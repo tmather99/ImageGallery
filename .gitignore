@@ -33,3 +33,7 @@
 /Client/bin/Debug/net7.0
 /DeviceClient/bin/Debug/net7.0
 /DeviceClient/obj
+/ImageGallery.Model/bin
+/ImageGallery.Authorization/bin/Debhg/net7.0
+/Marvin.IDP/bin/debugging/net7.0
+/ImageGallery.Authorization/bin/Release/net7.0

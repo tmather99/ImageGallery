@@ -18,12 +18,12 @@ internal static class HostingExtensions
 
         builder.Services.AddScoped<ILocalUserService, LocalUserService>();
 
+        var connectionString = builder.Configuration["ConnectionStrings:GlobomanticsDb"];
+        Log.Information($"connectionString = " + connectionString);
+
         builder.Services.AddDbContext<IdentityDbContext>(options =>
         {
             //options.UseSqlite(builder.Configuration.GetConnectionString("MarvinIdentityDBConnectionString"));
-
-            var connectionString = builder.Configuration["ConnectionStrings:GlobomanticsDb"];
-            Log.Information($"connectionString = " + connectionString);
             options.UseSqlServer(connectionString);
         });
 

@@ -16,6 +16,11 @@ try
         .Enrich.FromLogContext()
         .ReadFrom.Configuration(ctx.Configuration));
 
+    // Add services to the container.
+    builder.Services.AddHttpClient();
+    builder.Services.AddControllers().AddDapr();
+    builder.Services.AddDaprClient();
+
     var app = builder
         .ConfigureServices()
         .ConfigurePipeline();

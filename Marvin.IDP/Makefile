@@ -18,13 +18,13 @@ dapr-server-swagger:
 ### dotnet CLI
 
 dotnet-build:
-	dotnet build -c Release
+	dotnet build -c Debug
 
 dotnet-run:
 	powershell $$env:ASPNETCORE_URLS=\"https://*:5001\"; \
                $$env:ASPNETCORE_ENVIRONMENT=\"onebox\"; \
 			   $$env:SEQ_SERVER_URL=\'http://seq.local.com\'; \
-	      dotnet run -c Release --urls https://idp.imagegallery.com:5001
+	      dotnet run -c debugging --urls https://idp.imagegallery.com:5001
 
 ### Dapr sidecar for unit test debugging
 
@@ -40,8 +40,11 @@ dapr-run:
                $$env:DAPR_HTTP_PORT=3500; \
                $$env:SEQ_SERVER_URL=\'$(SEQ_SERVER_URL)\'; \
 		dapr run --app-id idp \
-		         --app-port 5001 \
                  --dapr-http-port $$env:DAPR_HTTP_PORT \
                  --components-path ../dapr/components \
                  --config ../dapr/config.yml \
                  -- dotnet run -c Release --urls https://idp.imagegallery.com:5001
+
+ef-update:
+	dotnet ef database update
+	

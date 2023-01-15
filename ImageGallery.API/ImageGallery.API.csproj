@@ -10,22 +10,18 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="ImageGallery.db-shm" />
-	  <None Remove="ImageGallery.db-wal" />
-	  <None Remove="ImageGallery.sqbpro" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 		<PackageReference Include="Dapr.AspNetCore" Version="1.9.0" />
 		<PackageReference Include="RestSharp" Version="108.0.3" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
 	</ItemGroup>
 
-		<ItemGroup>
-		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+	<ItemGroup>
+		<PackageReference Include="Duende.IdentityServer" Version="6.2.1" />
 		<PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="6.1.0" />
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.2" />
+
+		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.2" />
 		<!-- <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2" /> -->
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.2">
@@ -44,7 +40,7 @@
 
 	<ItemGroup>
 		<Content Update="wwwroot\images\3209d58a-d9ea-4da5-abb3-9656ca0eab8a.jpg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Update="wwwroot\images\3fbe2aea-2257-44f2-b3b1-3d8bacade89c.jpg">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -62,7 +58,7 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Update="wwwroot\images\79340aff-5f0d-4600-a594-3603e1b56ede.jpg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Update="wwwroot\Images\7e80a4c8-0a8a-4593-a16f-2e257294a1f9.jgp">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -95,7 +91,7 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Update="wwwroot\images\f78e9072-9454-4b5f-8500-c8fc75b877b8.jpg">
-		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Content>
 		<Content Update="wwwroot\images\fdfe7329-e05c-41fb-a7c7-4f3226d28c49.jpg">
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -103,19 +99,19 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <None Update="db\ImageGallery.db">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="db\ImageGallery.db-shm">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="db\ImageGallery.db-wal">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
+		<None Update="db\ImageGallery.db">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="db\ImageGallery.db-shm">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="db\ImageGallery.db-wal">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Migrations\" />
+		<Folder Include="Migrations\" />
 	</ItemGroup>
 
 </Project>

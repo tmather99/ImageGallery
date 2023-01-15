@@ -1,4 +1,6 @@
-﻿using Duende.IdentityServer.Extensions;
+﻿using System.Diagnostics;
+using Dapr.Client;
+using Duende.IdentityServer.Extensions;
 using Duende.IdentityServer.Models;
 
 namespace Duende.IdentityServer.Stores;
@@ -8,14 +10,19 @@ namespace Duende.IdentityServer.Stores;
 /// </summary>
 public class MyInMemoryClientStore : IClientStore
 {
+    private readonly DaprClient daprClient;
     private readonly IEnumerable<Client> _clients;
+    private readonly ILogger<MyInMemoryClientStore> logger;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="InMemoryClientStore"/> class.
     /// </summary>
     /// <param name="clients">The clients.</param>
-    public MyInMemoryClientStore(IEnumerable<Client> clients)
+    public MyInMemoryClientStore(DaprClient daprClient, IEnumerable<Client> clients, ILogger<MyInMemoryClientStore> logger)
     {
+        this.daprClient = daprClient;
+        this.logger = logger;
+
         if (clients.HasDuplicates(m => m.ClientId))
         {
             throw new ArgumentException("Clients must not contain duplicate ids");
@@ -30,16 +37,25 @@ public class MyInMemoryClientStore : IClientStore
     /// <returns>
     /// The client
     /// </returns>
-    public Task<Client> FindClientByIdAsync(string clientId)
+    public async Task<Client> FindClientByIdAsync(string clientId)
     {
+        //Debugger.Launch();
+
         var query = from client in _clients
                     where client.ClientId == clientId
                     select client;
 
         if (query.Any())
         {
-            return Task.FromResult(query.SingleOrDefault());
+            var client = query.SingleOrDefault();
+            this.logger.LogInformation(this.JsonSerialize(client));
+            return client;
         }
+
+        var metadata = new Dictionary<string, string>
+        {
+            { "Content-Type", "application/json" }
+        };
 
         var device = new Client
         {
@@ -61,6 +77,27 @@ public class MyInMemoryClientStore : IClientStore
             }
         };
 
-        return Task.FromResult(device);
+        var deviceState = await this.daprClient.GetStateAsync<Client>(storeName: "statestore", clientId, metadata: metadata);
+
+        if (deviceState != null)
+        {
+            this.logger.LogInformation(this.JsonSerialize(deviceState));
+
+            device.ClientId = deviceState.ClientId;
+            device.ClientSecrets = deviceState.ClientSecrets;
+            device.Claims = deviceState.Claims;
+        }
+
+        return device;
+    }
+    
+    private string JsonSerialize<T>(T thing)
+    {
+        var jsonSerializer = new Newtonsoft.Json.JsonSerializer();
+        var sw = new StringWriter();
+        var writer = new Newtonsoft.Json.JsonTextWriter(sw);
+        writer.Formatting = Newtonsoft.Json.Formatting.Indented;
+        jsonSerializer.Serialize(writer, thing);
+        return sw.ToString();
     }
 }

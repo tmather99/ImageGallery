@@ -1,17 +1,26 @@
-﻿// discover endpoints from metadata
-using System.Collections.Specialized;
-using System.IdentityModel.Tokens.Jwt;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Text;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Text.Json;
-using IdentityModel;
 using IdentityModel.Client;
-using Microsoft.IdentityModel.Tokens;
 
-JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
-
+var deviceUdid = Guid.NewGuid().ToString();
 var deviceClient = new HttpClient();
+
+var resp = await deviceClient.PostAsync(
+    "https://api.imagegallery.com:7075/api/device/enroll",
+    new FormUrlEncodedContent(
+        new Dictionary<string, string>()
+        {
+            { "deviceUdid", deviceUdid }
+        }));
+
+resp.EnsureSuccessStatusCode();
+
+var sharedSecret = await resp.Content.ReadAsStringAsync();
+
+Console.WriteLine($"  deviceUdid: {deviceUdid}\n" +
+                  $" sharedSeret: {sharedSecret}\n");
+
+// discover endpoints from metadata
 var disco = await deviceClient.GetDiscoveryDocumentAsync("https://idp.imagegallery.com:5001");
 if (disco.IsError)
 {
@@ -20,15 +29,13 @@ if (disco.IsError)
 }
 
 // request token
-var tokenResponse = await deviceClient.RequestClientCredentialsTokenAsync(new ClientCredentialsTokenRequest
-{
-    Address = disco.TokenEndpoint,
-
-    ClientId = "device-1",
-    ClientSecret = "secret",
-    Scope = "imagegalleryapi.read imagegalleryapi.write",
-});
-
+var tokenResponse = await deviceClient.RequestClientCredentialsTokenAsync(
+    new ClientCredentialsTokenRequest
+    {
+        Address = disco.TokenEndpoint,
+        ClientId = deviceUdid,
+        ClientSecret = sharedSecret,
+    });
 
 if (tokenResponse.IsError)
 {
@@ -36,7 +43,7 @@ if (tokenResponse.IsError)
     return;
 }
 
-Console.WriteLine("Access Token: " + tokenResponse.AccessToken);
+Console.WriteLine($"Access Token: {tokenResponse.AccessToken}\n");
 
 var jwt = new JwtSecurityToken(tokenResponse.AccessToken);
 
