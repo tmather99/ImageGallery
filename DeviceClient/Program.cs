@@ -2,7 +2,7 @@
 using System.Text.Json;
 using IdentityModel.Client;
 
-var deviceUdid = Guid.NewGuid().ToString();
+var deviceUdid = args.Length == 0 ? Guid.NewGuid().ToString() : args[0];
 var deviceClient = new HttpClient();
 
 var resp = await deviceClient.PostAsync(
