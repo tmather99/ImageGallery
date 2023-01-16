@@ -27,13 +27,13 @@ rm-nginx:
 	kubectl delete -f ingress-nginx-controller-v1.4.0.yml
 
 ingress:
-	kubectl apply -f dapr-ingress.yml 
+	kubectl apply -f imagegallery-ingress.yml 
 	kubectl apply -f dapr-dashboard-ingress.yml
 	kubectl apply -f kd-ingress.yml
 	kubectl apply -f grafana-ingress.yml
 
 rm-ingress:
-	kubectl delete -f dapr-ingress.yml
+	kubectl delete -f imagegallery-ingress.yml
 	kubectl delete -f dapr-dashboard-ingress.yml
 	kubectl delete -f kd-ingress.yml
 	kubectl delete -f grafana-ingress.yml
@@ -154,8 +154,6 @@ down: rm-sql rm-idp rm-api rm-client
 secrets:
 	kubectl create secret tls seq-onprem-tls --key="certs/seq-onprem.key" --cert="certs/seq-onprem.crt"
 	kubectl create secret tls zipkin-onprem-tls --key="certs/zipkin-onprem.key" --cert="certs/zipkin-onprem.crt"
-	kubectl create secret tls ingress-onprem-tls --key="certs/ingress-onprem.key" --cert="certs/ingress-onprem.crt"
-	kubectl create secret tls calculator-onprem-tls --key="certs/calculator-onprem.key" --cert="certs/calculator-onprem.crt"
 	kubectl create secret tls redis-onprem-tls --key="certs/redis-onprem.key" --cert="certs/redis-onprem.crt"
 	kubectl create secret tls rabbitmq-onprem-tls --key="certs/rabbitmq-onprem.key" --cert="certs/rabbitmq-onprem.crt"
 	kubectl create secret tls grafana-onprem-tls --key="certs/grafana-onprem.key" --cert="certs/grafana-onprem.crt" -n dapr-monitoring
@@ -164,12 +162,10 @@ secrets:
 rm-secrets:
 	kubectl delete secret seq-onprem-tls
 	kubectl delete secret zipkin-onprem-tls
-	kubectl delete secret rest-onprem-tls
-	kubectl delete secret ingress-onprem-tls
 	kubectl delete secret redis-onprem-tls
 	kubectl delete secret rabbitmq-onprem-tls
 	kubectl delete secret grafana-onprem-tls -n dapr-monitoring
 	kubectl delete secret -n kubernetes-dashboard kd-onprem-tls
 
-get-token:
+kd-token:
 	kubectl -n kubernetes-dashboard create token admin-user

@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana-ingress
+  namespace: dapr-monitoring
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - grafana.onprem.com
+      secretName: grafana-onprem-tls
+  rules:
+    - host: grafana.onprem.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: grafana
+                port:
+                  number: 80
