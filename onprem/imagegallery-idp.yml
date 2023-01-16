@@ -1,0 +1,71 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imagegallery-idp-app
+spec:
+  selector:
+    matchLabels:
+      app: imagegallery-idp-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: imagegallery-idp-app
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "imagegallery-idp"
+        dapr.io/app-port: "5001"
+        dapr.io/config: "tracing"
+        dapr.io/enable-metrics: "true"
+        dapr.io/metrics-port: "9090"        
+    spec:      
+      hostAliases:
+      - ip: "192.168.1.11"
+        hostnames:
+        - "idp.imagegallery.com"
+        - "api.imagegallery.com"
+        - "sql.imagegallery.com"
+        - "client.imagegallery.com"
+      containers:
+      - name: imagegallery-idp
+        image: tmather99/imagegallery-idp:v1
+        ports:
+        - containerPort: 5001
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "200m"  
+        imagePullPolicy: Always
+        env:
+          - name: SEQ_SERVER_URL
+            value: "http://seq-service"        
+          - name: ASPNETCORE_URLS
+            value: "https://*:5001"        
+          - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+            value: "Th@nhy99"
+          - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+            value: "/app/idp-imagegallery.pfx"        
+          - name: Client__RedirectUris
+            value: "https://client.imagegallery.com:7184/signin-oidc"
+          - name: Client__PostLogoutRedirectUris
+            value: "https://client.imagegallery.com:7184/signout-callback-oidc"
+      volumes:
+        - name: https-volume
+          hostPath:
+            path: C:/github/ImageGallery/https
+            type: Directory
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: imagegallery-idp-service
+spec:
+  selector:
+    app: imagegallery-idp-app  
+  type: LoadBalancer  
+  externalIPs:
+    - 192.168.1.11
+  ports:
+    - protocol: TCP 
+      port: 5001
+      targetPort: 5001

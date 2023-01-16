@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imagegallery-api-app
+spec:
+  selector:
+    matchLabels:
+      app: imagegallery-api-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: imagegallery-api-app
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "imagegallery-api"
+        dapr.io/app-port: "7075"
+        dapr.io/config: "tracing"
+        dapr.io/enable-metrics: "true"
+        dapr.io/metrics-port: "9090"        
+    spec:      
+      hostAliases:
+      - ip: "192.168.1.11"
+        hostnames:
+        - "idp.imagegallery.com"
+        - "api.imagegallery.com"
+        - "sql.imagegallery.com"
+        - "client.imagegallery.com"
+      containers:
+      - name: imagegallery-api
+        image: tmather99/imagegallery-api:v1
+        ports:
+        - containerPort: 7075
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "200m"  
+        imagePullPolicy: Always
+        env:
+        - name: SEQ_SERVER_URL
+          value: "http://seq-service"        
+        - name: ASPNETCORE_URLS
+          value: "https://+:7075"        
+        - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+          value: "Th@nhy99"
+        - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+          value: "/app/api-imagegallery.pfx"                 
+        - name: IdpServerUri
+          value: "https://idp.imagegallery.com:5001"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: imagegallery-api-service
+spec:
+  selector:
+    app: imagegallery-api-app  
+  type: LoadBalancer  
+  externalIPs:
+    - 192.168.1.11
+  ports:
+    - protocol: TCP 
+      port: 7075
+      targetPort: 7075
