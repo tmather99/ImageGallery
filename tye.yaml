@@ -1,0 +1,65 @@
+# tye application configuration file
+# read all about it at https://github.com/dotnet/tye
+#
+# when you've given us a try, we'd love to know what you think:
+#    https://aka.ms/AA7q20u
+#
+name: imagegallery
+network: imagegallery-network
+services:
+- name: marvin-idp
+  project: Marvin.IDP/Marvin.IDP.csproj
+  env:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: onebox
+    - name: ASPNETCORE_URLS
+      value: https://+:5001
+    - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+      value: Th@nhy99
+    - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+      value: /https/idp-imagegallery.pfx
+  bindings:
+    - port: 5001
+      protocol: https
+      host: idp.imagegallery.com
+  volumes:
+    - source: ./https
+      target: /https:ro
+
+- name: imagegallery-api
+  project: ImageGallery.API/ImageGallery.API.csproj
+  env:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: onebox
+    - name: ASPNETCORE_URLS
+      value: https://+:7075
+    - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+      value: Th@nhy99
+    - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+      value: /https/api-imagegallery.pfx
+  bindings:
+    - port: 7075
+      protocol: https
+      host: api.imagegallery.com
+  volumes:
+    - source: ./https
+      target: /https:ro
+
+- name: imagegallery-client
+  project: ImageGallery.Client/ImageGallery.Client.csproj
+  env:
+    - name: ASPNETCORE_ENVIRONMENT
+      value: onebox
+    - name: ASPNETCORE_URLS
+      value: https://+:7184
+    - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+      value: Th@nhy99
+    - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+      value: /https/client-imagegallery.pfx
+  bindings:
+    - port: 7184
+      protocol: https
+      host: client.imagegallery.com
+  volumes:
+    - source: ./https
+      target: /https:ro

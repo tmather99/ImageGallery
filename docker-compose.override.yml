@@ -65,4 +65,4 @@ services:
       - network
 
 networks:
-  network: {}
+  network: null

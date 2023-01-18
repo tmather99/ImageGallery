@@ -9,6 +9,15 @@ services:
     depends_on:
       - globosql
 
+  idp-dapr:
+    image: "daprio/daprd:edge"
+    command: [ "./daprd", "--app-id", "idp", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
+    volumes:
+        - ./components/:/components:ro
+    depends_on:
+      - idp
+    network_mode: "service:idp" 
+
   api:
     image: ${DOCKER_REGISTRY}/imagegallery-api:${VERSION}
     build:
@@ -16,6 +25,15 @@ services:
       dockerfile: ImageGallery.API/Dockerfile
     depends_on:
       - idp
+
+  api-dapr:
+    image: "daprio/daprd:edge"
+    command: [ "./daprd", "--app-id", "api", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
+    volumes:
+        - ./components/:/components:ro
+    depends_on:
+      - api
+    network_mode: "service:api" 
 
   client:
     image: ${DOCKER_REGISTRY}/imagegallery-client:${VERSION}
@@ -31,4 +49,41 @@ services:
       context: .
       dockerfile: mssql/Dockerfile
     restart: always
+  
+  redis-commander:
+    image: rediscommander/redis-commander
+    environment:
+      - REDIS_HOST=redis-host
+      - REDIS_PORT="6379"
+      - REDIS_PASSWORD=""
+    ports:
+      - "8081:8081"
+    networks:
+      - network
 
+  redis-statestore:
+    image: "redis"
+    hostname: redis-host
+    ports:
+      - "6379:6379"
+    restart: always
+    depends_on:
+      - placement
+    networks:
+      - network
+
+  redis-statestore-dapr:
+    image: "daprio/daprd:edge"
+    command:
+      [ "./daprd", "-app-id", "statestore", "-app-port", "6379", "-components-path", "/components", "-placement-host-address", "placement:50006" ]
+    volumes: 
+        - ./components/:/components:ro
+    depends_on:
+      - redis-statestore
+    network_mode: "service:redis-statestore"
+
+  placement:
+    image: "daprio/dapr"
+    command: ["./placement", "--port", "50006"]
+    ports:
+      - "50006:50006"

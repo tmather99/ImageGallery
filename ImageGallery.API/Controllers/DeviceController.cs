@@ -23,12 +23,20 @@ namespace ImageGallery.API.Controllers
         {
             //Debugger.Launch();
 
-            var deviceUdid = formContent["deviceUdid"];
-            var deviceState = await this.daprClient.GetStateAsync<Client>(storeName: "statestore", deviceUdid);
-
-            if (deviceState != null)
+            Client deviceState = null;
+                
+            if (formContent.TryGetValue("deviceUdid", out string deviceUdid))
             {
-                return Ok(await this.SaveDeviceStateAsync(deviceState));
+                deviceState = await this.daprClient.GetStateAsync<Client>(storeName: "statestore", deviceUdid);
+
+                if (deviceState != null)
+                {
+                    return Ok(await this.SaveDeviceStateAsync(deviceState));
+                }
+            }
+            else
+            {
+                deviceUdid = Guid.NewGuid().ToString();
             }
 
             deviceState = new Client
