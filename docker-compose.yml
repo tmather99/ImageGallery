@@ -7,7 +7,7 @@ services:
       context: .
       dockerfile: Marvin.IDP/Dockerfile
     depends_on:
-      - globosql
+      - placement
 
   idp-dapr:
     image: "daprio/daprd:edge"

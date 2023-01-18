@@ -5,6 +5,11 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
+COPY ./https/idp-imagegallery.crt /usr/share/ca-certificates
+RUN echo idp-imagegallery.crt >> /etc/ca-certificates.conf
+RUN update-ca-certificates
+
+
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["ImageGallery.API/ImageGallery.API.csproj", "ImageGallery.API/"]
@@ -21,11 +26,5 @@ RUN dotnet publish "ImageGallery.API.csproj" -c Release -o /app/publish /p:UseAp
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-
-COPY ./https/api-imagegallery.pfx .
-
-COPY ./https/idp-imagegallery.crt /usr/share/ca-certificates
-RUN echo idp-imagegallery.crt >> /etc/ca-certificates.conf
-RUN update-ca-certificates
 
 ENTRYPOINT ["dotnet", "ImageGallery.API.dll"]

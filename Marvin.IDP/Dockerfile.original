@@ -5,10 +5,6 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-COPY ./https/client-imagegallery.crt /usr/share/ca-certificates
-RUN echo client-imagegallery.crt >> /etc/ca-certificates.conf
-RUN update-ca-certificates
-
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
 WORKDIR /src
 COPY ["Marvin.IDP/Marvin.IDP.csproj", "Marvin.IDP/"]
@@ -23,5 +19,11 @@ RUN dotnet publish "Marvin.IDP.csproj" -c Release -o /app/publish /p:UseAppHost=
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+COPY ./https/idp-imagegallery.pfx .
+
+COPY ./https/client-imagegallery.crt /usr/share/ca-certificates
+RUN echo client-imagegallery.crt >> /etc/ca-certificates.conf
+RUN update-ca-certificates
 
 ENTRYPOINT ["dotnet", "Marvin.IDP.dll"]

@@ -1,4 +1,5 @@
 FROM mcr.microsoft.com/mssql/server
+EXPOSE 1443
 
 ARG PROJECT_DIR=/tmp/globomantics
 RUN mkdir -p $PROJECT_DIR
