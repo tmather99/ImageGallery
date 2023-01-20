@@ -33,7 +33,7 @@ namespace ImageGallery.API.Services
             }
 
             return await _context.Images
-                .Where(i => i.OwnerId == ownerId)
+                .Where(i => i.OwnerId == ownerId || i.Title.Contains(ownerId))
                 .OrderBy(i => i.Title).ToListAsync();
         }
 

@@ -43,6 +43,15 @@ services:
     depends_on:
       - idp
 
+  client-dapr:
+    image: "daprio/daprd:edge"
+    command: [ "./daprd", "--app-id", "client", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
+    volumes:
+        - ./components/:/components:ro
+    depends_on:
+      - client
+    network_mode: "service:client" 
+
   globosql:
     image: ${DOCKER_REGISTRY}/imagegallery-sql:${VERSION}
     build:

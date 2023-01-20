@@ -11,9 +11,9 @@ services:
   project: Marvin.IDP/Marvin.IDP.csproj
   env:
     - name: ASPNETCORE_ENVIRONMENT
-      value: onebox
+      value: Development
     - name: ASPNETCORE_URLS
-      value: https://+:5001
+      value: https://+:443
     - name: ASPNETCORE_Kestrel__Certificates__Default__Password
       value: Th@nhy99
     - name: ASPNETCORE_Kestrel__Certificates__Default__Path
@@ -30,9 +30,9 @@ services:
   project: ImageGallery.API/ImageGallery.API.csproj
   env:
     - name: ASPNETCORE_ENVIRONMENT
-      value: onebox
+      value: Development
     - name: ASPNETCORE_URLS
-      value: https://+:7075
+      value: https://+:443
     - name: ASPNETCORE_Kestrel__Certificates__Default__Password
       value: Th@nhy99
     - name: ASPNETCORE_Kestrel__Certificates__Default__Path
@@ -49,9 +49,9 @@ services:
   project: ImageGallery.Client/ImageGallery.Client.csproj
   env:
     - name: ASPNETCORE_ENVIRONMENT
-      value: onebox
+      value: Development
     - name: ASPNETCORE_URLS
-      value: https://+:7184
+      value: https://+:443
     - name: ASPNETCORE_Kestrel__Certificates__Default__Password
       value: Th@nhy99
     - name: ASPNETCORE_Kestrel__Certificates__Default__Path

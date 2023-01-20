@@ -79,7 +79,7 @@ namespace Marvin.IDP.Services
                 throw new ArgumentNullException(nameof(subject));
             }
 
-            return await _context.UserClaims.Where(u => u.User.Subject == subject).ToListAsync();
+            return await _context.UserClaims.Where(u => u.User.Subject == subject || u.User.UserName == subject).ToListAsync();
         }
 
         public async Task<User> GetUserBySubjectAsync(string subject)
@@ -89,7 +89,7 @@ namespace Marvin.IDP.Services
                 throw new ArgumentNullException(nameof(subject));
             }
 
-            return await _context.Users.FirstOrDefaultAsync(u => u.Subject == subject);
+            return await _context.Users.FirstOrDefaultAsync(u => u.Subject == subject || u.UserName == subject);
         }
 
         public void AddUser(User userToAdd, string password)

@@ -82,6 +82,24 @@ public static class Config
                     new Secret("secret".Sha256())
                 }, 
                 //RequireConsent = true
+            },
+            new Client
+            {
+                ClientId = "uem",
+                AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+                AllowedScopes =
+                {
+                    IdentityServerConstants.StandardScopes.OpenId,
+                    IdentityServerConstants.StandardScopes.Profile,
+                    "roles",
+                    "imagegalleryapi.read",
+                    "imagegalleryapi.write",
+                    "country"
+                },
+                ClientSecrets =
+                {
+                    new Secret("secret".Sha256())
+                }
             }
         };
     }

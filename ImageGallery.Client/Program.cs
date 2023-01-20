@@ -44,6 +44,10 @@ try
 
     builder.Services.AddAccessTokenManagement();
 
+    // Add services to the container.
+    builder.Services.AddControllers().AddDapr();
+    builder.Services.AddDaprClient();
+
     // create an HttpClient used for accessing the API
     builder.Services.AddHttpClient("APIClient", client =>
     {
