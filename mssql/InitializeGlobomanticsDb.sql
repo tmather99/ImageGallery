@@ -162,3 +162,4 @@ CREATE USER [globo_dbuser] FOR LOGIN [globo_dbuser];
 GO
 EXEC sp_addrolemember N'db_owner', [globo_dbuser];
 GO
+
