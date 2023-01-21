@@ -113,7 +113,9 @@ try
 
     app.UseAuthorization();
 
+    app.UseCloudEvents();
     app.MapControllers();
+    app.MapSubscribeHandler(); // This is the Dapr subscribe handler
 
     app.Run();
 }

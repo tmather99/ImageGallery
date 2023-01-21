@@ -37,6 +37,25 @@ sql:
 rm-sql:
 	docker compose stop globosql
 
+redis:
+	docker compose up redis-statestore
+
+rm-redis:
+	docker compose stop redis-statestore
+
+redis-commander:
+	docker compose up redis-commander
+
+rm-redis-commander:
+	docker compose stop redis-commander
+
+rabbitmq:
+	docker compose up rabbitmq
+
+rm-rabbitmq:
+	docker compose stop rabbitmq
+
+
 # dotnet tool install --global dotnet-ef
 ef-update:
 	cd ./Marvin.IDP && dotnet ef database update && cd ..

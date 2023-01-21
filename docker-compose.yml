@@ -11,12 +11,14 @@ services:
 
   idp-dapr:
     image: "daprio/daprd:edge"
-    command: [ "./daprd", "--app-id", "idp", "-app-ssl", "-app-port", "5001", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
+    command: [ "./daprd", "--app-id", "idp", "--app-port", "443", "--placement-host-address", "placement:50006", "--components-path", "/components", "--app-ssl"  ]
     volumes:
         - ./components/:/components:ro
     depends_on:
       - idp
     network_mode: "service:idp" 
+    networks:
+      - network
 
   api:
     image: ${DOCKER_REGISTRY}/imagegallery-api:${VERSION}
@@ -24,11 +26,11 @@ services:
       context: .
       dockerfile: ImageGallery.API/Dockerfile
     depends_on:
-      - idp
+      - placement
 
   api-dapr:
     image: "daprio/daprd:edge"
-    command: [ "./daprd", "--app-id", "api", "-app-ssl", "-app-port", "7075", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
+    command: [ "./daprd", "--app-id", "api", "--app-port", "443", "--placement-host-address", "placement:50006", "--components-path", "/components", "--app-ssl" ]
     volumes:
         - ./components/:/components:ro
     depends_on:
@@ -41,16 +43,18 @@ services:
       context: .
       dockerfile: ImageGallery.Client/Dockerfile
     depends_on:
-      - idp
+      - placement
 
   client-dapr:
     image: "daprio/daprd:edge"
-    command: [ "./daprd", "--app-id", "client", "-app-ssl", "-app-port", "7184", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
+    command: [ "./daprd", "--app-id", "client", "--app-port", "443", "--placement-host-address", "placement:50006", "--components-path", "/components", "--app-ssl" ]
     volumes:
         - ./components/:/components:ro
     depends_on:
       - client
     network_mode: "service:client" 
+    networks:
+      - network
 
   globosql:
     image: ${DOCKER_REGISTRY}/imagegallery-sql:${VERSION}
@@ -59,6 +63,18 @@ services:
       dockerfile: mssql/Dockerfile
     restart: always
   
+  sqlpad:
+    image: sqlpad/sqlpad
+    environment:
+      - SQLPAD_ADMIN=admin
+      - SQLPAD_ADMIN_PASSWORD=admin
+    ports:
+      - "3000:3000"
+    networks:
+      - network
+    extra_hosts:
+      - "sql.imagegallery.com: ${SQL_SERVER}"
+
   redis-commander:
     image: rediscommander/redis-commander
     environment:
@@ -81,8 +97,23 @@ services:
     networks:
       - network
 
+  rabbitmq:
+    image: rabbitmq:3-management
+    hostname: rabbitmq-host
+    container_name: 'rabbitmq'
+    environment:
+      - RABBITMQ_DEFAULT_USER=admin
+      - RABBITMQ_DEFAULT_PASS=admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - network
+
   placement:
     image: "daprio/dapr"
     command: ["./placement", "--port", "50006"]
     ports:
       - "50006:50006"
+    networks:
+      - network

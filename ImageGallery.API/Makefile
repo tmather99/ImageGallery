@@ -31,3 +31,4 @@ dapr-run:
 
 ef-update:
 	dotnet ef database update
+

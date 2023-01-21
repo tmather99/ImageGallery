@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Dapr.Client;
 using Duende.IdentityServer.Models;
+using Dapr;
 
 namespace ImageGallery.API.Controllers
 {
@@ -76,6 +77,8 @@ namespace ImageGallery.API.Controllers
             this.logger.LogInformation($"ttl: {metadata["ttlInSeconds"]}\nsharedSecrets: {sharedSecret}\n{this.JsonSerialize(deviceState)}");
 
             await this.daprClient.SaveStateAsync<Client>(storeName: "statestore", deviceUdid, value: deviceState, metadata: metadata);
+
+            await this.daprClient.PublishEventAsync<Client>(pubsubName: "pubsub", topicName: "state", data: deviceState);
 
             return sharedSecret;
         }
