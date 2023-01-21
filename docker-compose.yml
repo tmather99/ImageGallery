@@ -11,7 +11,7 @@ services:
 
   idp-dapr:
     image: "daprio/daprd:edge"
-    command: [ "./daprd", "--app-id", "idp", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
+    command: [ "./daprd", "--app-id", "idp", "-app-ssl", "-app-port", "5001", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
     volumes:
         - ./components/:/components:ro
     depends_on:
@@ -28,7 +28,7 @@ services:
 
   api-dapr:
     image: "daprio/daprd:edge"
-    command: [ "./daprd", "--app-id", "api", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
+    command: [ "./daprd", "--app-id", "api", "-app-ssl", "-app-port", "7075", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
     volumes:
         - ./components/:/components:ro
     depends_on:
@@ -45,7 +45,7 @@ services:
 
   client-dapr:
     image: "daprio/daprd:edge"
-    command: [ "./daprd", "--app-id", "client", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
+    command: [ "./daprd", "--app-id", "client", "-app-ssl", "-app-port", "7184", "--placement-host-address", "placement:50006", "--components-path", "/components" ]
     volumes:
         - ./components/:/components:ro
     depends_on:
@@ -80,16 +80,6 @@ services:
       - placement
     networks:
       - network
-
-  redis-statestore-dapr:
-    image: "daprio/daprd:edge"
-    command:
-      [ "./daprd", "-app-id", "statestore", "-app-port", "6379", "-components-path", "/components", "-placement-host-address", "placement:50006" ]
-    volumes: 
-        - ./components/:/components:ro
-    depends_on:
-      - redis-statestore
-    network_mode: "service:redis-statestore"
 
   placement:
     image: "daprio/dapr"
