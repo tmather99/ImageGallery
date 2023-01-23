@@ -112,6 +112,12 @@ sql:
 rm-sql:
 	kubectl delete -f imagegallery-sql.yml
 
+sqlpad:
+	kubectl apply -f sqlpad.yml
+
+rm-sqlpad:
+	kubectl delete -f sqlpad.yml
+
 up: sql idp api client
 
 down: rm-sql rm-idp rm-api rm-client
@@ -123,6 +129,7 @@ secrets:
 	kubectl create secret tls zipkin-local-tls --key="certs/zipkin-local.key" --cert="certs/zipkin-local.crt"
 	kubectl create secret tls redis-local-tls --key="certs/redis-local.key" --cert="certs/redis-local.crt"
 	kubectl create secret tls rabbitmq-local-tls --key="certs/rabbitmq-local.key" --cert="certs/rabbitmq-local.crt"
+	kubectl create secret tls sqlpad-local-tls --key="certs/sqlpad-local.key" --cert="certs/sqlpad-local.crt"
 	kubectl -n kubernetes-dashboard create secret tls kd-local-tls --key="certs/kd-local.key" --cert="certs/kd-local.crt"
 
 rm-secrets:
@@ -131,6 +138,7 @@ rm-secrets:
 	kubectl delete secret zipkin-local-tls
 	kubectl delete secret redis-local-tls
 	kubectl delete secret rabbitmq-local-tls
+	kubectl delete secret sqlpad-local-tls
 	kubectl delete secret -n kubernetes-dashboard kd-local-tls
 
 get-token:

@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sqlpad-app
+spec:
+  selector:
+    matchLabels:
+      app: sqlpad-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sqlpad-app
+    spec:      
+      hostAliases:
+      - ip: "192.168.1.16"
+        hostnames:
+        - "sql.imagegallery.com"
+      containers:
+      - name: sqlpad
+        image: sqlpad/sqlpad
+        ports:
+        - containerPort: 3000
+        env:
+        - name: SQLPAD_ADMIN
+          value: "admin"
+        - name: SQLPAD_ADMIN_PASSWORD
+          value: "admin"
+        resources:
+          limits:
+            memory: "1000Mi"
+            cpu: "512m"  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sqlpad-service
+spec:
+  selector:
+    app: sqlpad-app  
+  type: ClusterIP  
+  ports:
+    - protocol: TCP 
+      port: 3000
+      targetPort: 3000
