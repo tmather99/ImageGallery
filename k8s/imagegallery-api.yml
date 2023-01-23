@@ -14,10 +14,11 @@ spec:
       annotations:
         dapr.io/enabled: "true"
         dapr.io/app-id: "imagegallery-api"
-        dapr.io/app-port: "7075"
+        dapr.io/app-port: "443"
+        dapr.io/app-ssl: "true"
         dapr.io/config: "tracing"
         dapr.io/enable-metrics: "true"
-        dapr.io/metrics-port: "9090"        
+        dapr.io/metrics-port: "9090" 
     spec:      
       hostAliases:
       - ip: "192.168.1.16"
@@ -26,11 +27,19 @@ spec:
         - "api.imagegallery.com"
         - "sql.imagegallery.com"
         - "client.imagegallery.com"
+      volumes:
+        - name: https-volume
+          hostPath:
+            path: /run/desktop/mnt/host/c/github/ImageGallery/https
+            type: Directory
       containers:
       - name: imagegallery-api
+        volumeMounts:
+          - mountPath: /https
+            name: https-volume
         image: tmather99/imagegallery-api:v1
         ports:
-        - containerPort: 7075
+        - containerPort: 443
         resources:
           limits:
             memory: "128Mi"
@@ -40,11 +49,11 @@ spec:
         - name: SEQ_SERVER_URL
           value: "http://seq-service"        
         - name: ASPNETCORE_URLS
-          value: "https://+:7075"        
+          value: "https://+:443"        
         - name: ASPNETCORE_Kestrel__Certificates__Default__Password
           value: "Th@nhy99"
         - name: ASPNETCORE_Kestrel__Certificates__Default__Path
-          value: "/app/api-imagegallery.pfx"                 
+          value: "/https/api-imagegallery.pfx"                 
         - name: IdpServerUri
           value: "https://idp.imagegallery.com:5001"
 ---
@@ -59,4 +68,4 @@ spec:
   ports:
     - protocol: TCP 
       port: 7075
-      targetPort: 7075
+      targetPort: 443

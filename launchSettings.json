@@ -1,0 +1,22 @@
+{
+  "profiles": {
+    "Docker Compose": {
+      "commandName": "DockerCompose",
+      "commandVersion": "1.0",
+      "serviceActions": {
+        "api": "StartDebugging",
+        "api-dapr": "StartWithoutDebugging",
+        "client": "StartDebugging",
+        "client-dapr": "StartWithoutDebugging",
+        "globosql": "StartWithoutDebugging",
+        "idp": "StartDebugging",
+        "idp-dapr": "StartWithoutDebugging",
+        "placement": "StartWithoutDebugging",
+        "rabbitmq": "StartWithoutDebugging",
+        "redis-commander": "StartWithoutDebugging",
+        "redis-statestore": "StartWithoutDebugging",
+        "sqlpad": "StartWithoutDebugging"
+      }
+    }
+  }
+}

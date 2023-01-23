@@ -4,9 +4,8 @@
     <ProjectVersion>2.1</ProjectVersion>
     <DockerTargetOS>Linux</DockerTargetOS>
     <ProjectGuid>d5a4a5b9-5137-4ee3-94e4-62e94767f43d</ProjectGuid>
-    <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
-    <DockerServiceUrl>{Scheme}://localhost:{ServicePort}</DockerServiceUrl>
-    <DockerServiceName>imagegallery.client</DockerServiceName>
+    <DockerLaunchAction>None</DockerLaunchAction>
+    <DockerServiceUrl>https://api.imagegallery.com:{ServicePort}</DockerServiceUrl>
   </PropertyGroup>
   <ItemGroup>
     <None Include=".env" />
@@ -21,6 +20,5 @@
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
     <None Include="Makefile" />
-    <None Include="stateStore.yml" />
   </ItemGroup>
 </Project>
