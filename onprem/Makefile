@@ -165,6 +165,7 @@ secrets:
 	kubectl create secret tls zipkin-onprem-tls --key="certs/zipkin-onprem.key" --cert="certs/zipkin-onprem.crt"
 	kubectl create secret tls redis-onprem-tls --key="certs/redis-onprem.key" --cert="certs/redis-onprem.crt"
 	kubectl create secret tls rabbitmq-onprem-tls --key="certs/rabbitmq-onprem.key" --cert="certs/rabbitmq-onprem.crt"
+	kubectl create secret tls sqlpad-onprem-tls --key="certs/sqlpad-onprem.key" --cert="certs/sqlpad-onprem.crt"
 	kubectl create secret tls grafana-onprem-tls --key="certs/grafana-onprem.key" --cert="certs/grafana-onprem.crt" -n dapr-monitoring
 	kubectl -n kubernetes-dashboard create secret tls kd-onprem-tls --key="certs/kd-onprem.key" --cert="certs/kd-onprem.crt"
 
@@ -173,6 +174,7 @@ rm-secrets:
 	kubectl delete secret zipkin-onprem-tls
 	kubectl delete secret redis-onprem-tls
 	kubectl delete secret rabbitmq-onprem-tls
+	kubectl delete secret sqlpad-onprem-tls
 	kubectl delete secret grafana-onprem-tls -n dapr-monitoring
 	kubectl delete secret -n kubernetes-dashboard kd-onprem-tls
 

@@ -17,6 +17,9 @@ spec:
   - hosts:
       - rabbitmq.onprem.com
     secretName: rabbitmq-onprem-tls   
+  - hosts:
+      - sqlpad.onprem.com
+    secretName: sqlpad-onprem-tls   
   rules:
   - host: seq.onprem.com
     http:
@@ -58,3 +61,13 @@ spec:
             name: rabbitmq
             port: 
               number: 15672  
+  - host: sqlpad.onprem.com
+    http:
+      paths:      
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: sqlpad-service
+            port: 
+              number: 3000  
