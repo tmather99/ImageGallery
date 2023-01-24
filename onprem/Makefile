@@ -69,6 +69,15 @@ redis-commander:
 rm-redis-commander:
 	kubectl delete -f redis-commander.yml
 
+# helm repo add bitnami https://charts.bitnami.com/bitnami
+rabbitmq:
+	helm install rabbitmq \
+	--set auth.username=admin,auth.password=admin,auth.erlangCookie=secretcookie,replicaCount=3 \
+	bitnami/rabbitmq
+	
+rm-rabbitmq:
+	helm delete rabbitmq
+
 # helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 # helm repo update
 # kubectl create namespace dapr-monitoring
@@ -111,11 +120,11 @@ metrics-server:
 rm-metrics-server:
 	helm delete metrics -n kube-system 
 
-dapr-pubsub:
-	kubectl apply -f dapr/pubsub.yml
+dapr-pubsub-rabbitmq:
+	kubectl apply -f dapr/pubsub-rabbitmq.yml
 
-rm-dapr-pubsub:
-	kubectl delete -f dapr/pubsub.yml
+rm-dapr-pubsub-rabbitmq:
+	kubectl delete -f dapr/pubsub-rabbitmq.yml
 
 dapr-statestore:
 	kubectl apply -f dapr/statestore.yml
@@ -147,9 +156,9 @@ sql:
 rm-sql:
 	kubectl delete -f imagegallery-sql.yml
 
-up: sql idp api client
+up: idp api client
 
-down: rm-sql rm-idp rm-api rm-client
+down: rm-idp rm-api rm-client
 
 secrets:
 	kubectl create secret tls seq-onprem-tls --key="certs/seq-onprem.key" --cert="certs/seq-onprem.crt"

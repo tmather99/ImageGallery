@@ -14,23 +14,31 @@ spec:
       annotations:
         dapr.io/enabled: "true"
         dapr.io/app-id: "imagegallery-client"
-        dapr.io/app-port: "7184"
+        dapr.io/app-port: "443"
+        dapr.io/app-ssl: "true"
         dapr.io/config: "tracing"
         dapr.io/enable-metrics: "true"
         dapr.io/metrics-port: "9090"        
     spec:      
       hostAliases:
-      - ip: "192.168.1.11"
+      - ip: "192.168.1.12"
         hostnames:
         - "idp.imagegallery.com"
         - "api.imagegallery.com"
         - "sql.imagegallery.com"
         - "client.imagegallery.com"
+      volumes:
+      - name: https-volume
+        persistentVolumeClaim:
+          claimName: pvc-https
       containers:
       - name: imagegallery-client
+        volumeMounts:
+          - mountPath: /https
+            name: https-volume
         image: tmather99/imagegallery-client:v1
         ports:
-        - containerPort: 7184
+        - containerPort: 443
         resources:
           limits:
             memory: "128Mi"
@@ -40,11 +48,11 @@ spec:
         - name: SEQ_SERVER_URL
           value: "http://seq-service"        
         - name: ASPNETCORE_URLS
-          value: "https://+:7184"        
+          value: "https://+:443"        
         - name: ASPNETCORE_Kestrel__Certificates__Default__Password
           value: "Th@nhy99"
         - name: ASPNETCORE_Kestrel__Certificates__Default__Path
-          value: "/app/client-imagegallery.pfx"                
+          value: "/https/client-imagegallery.pfx"                
         - name: ImageGalleryAPIRoot
           value: "https://api.imagegallery.com:7075"
         - name: IdpServerUri
@@ -59,8 +67,8 @@ spec:
     app: imagegallery-client-app  
   type: LoadBalancer  
   externalIPs:
-    - 192.168.1.11
+    - 192.168.1.12
   ports:
     - protocol: TCP 
       port: 7184
-      targetPort: 7184
+      targetPort: 443
