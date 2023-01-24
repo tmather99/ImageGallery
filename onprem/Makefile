@@ -156,6 +156,12 @@ sql:
 rm-sql:
 	kubectl delete -f imagegallery-sql.yml
 
+sqlpad:
+	kubectl apply -f sqlpad.yml
+
+rm-sqlpad:
+	kubectl delete -f sqlpad.yml
+
 up: idp api client
 
 down: rm-idp rm-api rm-client
