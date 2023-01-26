@@ -172,3 +172,9 @@ rm-argocd-ingress:
 
 argocd-password:
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
+
+argocd-application:
+	kubectl apply -f argocd-application.yml
+
+rm-argocd-application:
+	kubectl delete -f argocd-application.yml
