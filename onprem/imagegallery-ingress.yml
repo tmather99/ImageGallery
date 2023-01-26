@@ -6,9 +6,6 @@ spec:
   ingressClassName: nginx
   tls:
   - hosts:
-      - ingress.onprem.com
-    secretName: ingress-onprem-tls  
-  - hosts:
       - seq.onprem.com
     secretName: seq-onprem-tls   
   - hosts:
@@ -21,19 +18,9 @@ spec:
       - rabbitmq.onprem.com
     secretName: rabbitmq-onprem-tls   
   - hosts:
-      - react.onprem.com
-    secretName: react-onprem-tls   
+      - sqlpad.onprem.com
+    secretName: sqlpad-onprem-tls   
   rules:
-  - host: ingress.onprem.com
-    http:
-      paths:      
-      - path: /
-        pathType: Prefix
-        backend:
-          service:
-            name: dapr-client-service
-            port: 
-              number: 8083  
   - host: seq.onprem.com
     http:
       paths:      
@@ -74,13 +61,13 @@ spec:
             name: rabbitmq
             port: 
               number: 15672  
-  - host: react.onprem.com
+  - host: sqlpad.onprem.com
     http:
       paths:      
       - path: /
         pathType: Prefix
         backend:
           service:
-            name: react-form
+            name: sqlpad-service
             port: 
-              number: 80  
+              number: 3000  

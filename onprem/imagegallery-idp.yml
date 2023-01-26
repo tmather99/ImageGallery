@@ -14,23 +14,31 @@ spec:
       annotations:
         dapr.io/enabled: "true"
         dapr.io/app-id: "imagegallery-idp"
-        dapr.io/app-port: "5001"
+        dapr.io/app-port: "443"
+        dapr.io/app-ssl: "true"
         dapr.io/config: "tracing"
         dapr.io/enable-metrics: "true"
         dapr.io/metrics-port: "9090"        
     spec:      
       hostAliases:
-      - ip: "192.168.1.11"
+      - ip: "192.168.1.12"
         hostnames:
         - "idp.imagegallery.com"
         - "api.imagegallery.com"
         - "sql.imagegallery.com"
         - "client.imagegallery.com"
+      volumes:
+      - name: https-volume
+        persistentVolumeClaim:
+          claimName: pvc-https
       containers:
       - name: imagegallery-idp
+        volumeMounts:
+          - mountPath: /https
+            name: https-volume
         image: tmather99/imagegallery-idp:v1
         ports:
-        - containerPort: 5001
+        - containerPort: 443
         resources:
           limits:
             memory: "128Mi"
@@ -40,20 +48,15 @@ spec:
           - name: SEQ_SERVER_URL
             value: "http://seq-service"        
           - name: ASPNETCORE_URLS
-            value: "https://*:5001"        
+            value: "https://+:443"        
           - name: ASPNETCORE_Kestrel__Certificates__Default__Password
             value: "Th@nhy99"
           - name: ASPNETCORE_Kestrel__Certificates__Default__Path
-            value: "/app/idp-imagegallery.pfx"        
+            value: "/https/idp-imagegallery.pfx"        
           - name: Client__RedirectUris
             value: "https://client.imagegallery.com:7184/signin-oidc"
           - name: Client__PostLogoutRedirectUris
             value: "https://client.imagegallery.com:7184/signout-callback-oidc"
-      volumes:
-        - name: https-volume
-          hostPath:
-            path: C:/github/ImageGallery/https
-            type: Directory
 ---
 apiVersion: v1
 kind: Service
@@ -64,8 +67,8 @@ spec:
     app: imagegallery-idp-app  
   type: LoadBalancer  
   externalIPs:
-    - 192.168.1.11
+    - 192.168.1.12
   ports:
     - protocol: TCP 
       port: 5001
-      targetPort: 5001
+      targetPort: 443

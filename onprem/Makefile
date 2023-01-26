@@ -69,6 +69,15 @@ redis-commander:
 rm-redis-commander:
 	kubectl delete -f redis-commander.yml
 
+# helm repo add bitnami https://charts.bitnami.com/bitnami
+rabbitmq:
+	helm install rabbitmq \
+	--set auth.username=admin,auth.password=admin,auth.erlangCookie=secretcookie,replicaCount=3 \
+	bitnami/rabbitmq
+	
+rm-rabbitmq:
+	helm delete rabbitmq
+
 # helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 # helm repo update
 # kubectl create namespace dapr-monitoring
@@ -111,11 +120,11 @@ metrics-server:
 rm-metrics-server:
 	helm delete metrics -n kube-system 
 
-dapr-pubsub:
-	kubectl apply -f dapr/pubsub.yml
+dapr-pubsub-rabbitmq:
+	kubectl apply -f dapr/pubsub-rabbitmq.yml
 
-rm-dapr-pubsub:
-	kubectl delete -f dapr/pubsub.yml
+rm-dapr-pubsub-rabbitmq:
+	kubectl delete -f dapr/pubsub-rabbitmq.yml
 
 dapr-statestore:
 	kubectl apply -f dapr/statestore.yml
@@ -147,15 +156,22 @@ sql:
 rm-sql:
 	kubectl delete -f imagegallery-sql.yml
 
-up: sql idp api client
+sqlpad:
+	kubectl apply -f sqlpad.yml
 
-down: rm-sql rm-idp rm-api rm-client
+rm-sqlpad:
+	kubectl delete -f sqlpad.yml
+
+up: idp api client
+
+down: rm-idp rm-api rm-client
 
 secrets:
 	kubectl create secret tls seq-onprem-tls --key="certs/seq-onprem.key" --cert="certs/seq-onprem.crt"
 	kubectl create secret tls zipkin-onprem-tls --key="certs/zipkin-onprem.key" --cert="certs/zipkin-onprem.crt"
 	kubectl create secret tls redis-onprem-tls --key="certs/redis-onprem.key" --cert="certs/redis-onprem.crt"
 	kubectl create secret tls rabbitmq-onprem-tls --key="certs/rabbitmq-onprem.key" --cert="certs/rabbitmq-onprem.crt"
+	kubectl create secret tls sqlpad-onprem-tls --key="certs/sqlpad-onprem.key" --cert="certs/sqlpad-onprem.crt"
 	kubectl create secret tls grafana-onprem-tls --key="certs/grafana-onprem.key" --cert="certs/grafana-onprem.crt" -n dapr-monitoring
 	kubectl -n kubernetes-dashboard create secret tls kd-onprem-tls --key="certs/kd-onprem.key" --cert="certs/kd-onprem.crt"
 
@@ -164,6 +180,7 @@ rm-secrets:
 	kubectl delete secret zipkin-onprem-tls
 	kubectl delete secret redis-onprem-tls
 	kubectl delete secret rabbitmq-onprem-tls
+	kubectl delete secret sqlpad-onprem-tls
 	kubectl delete secret grafana-onprem-tls -n dapr-monitoring
 	kubectl delete secret -n kubernetes-dashboard kd-onprem-tls
 
