@@ -2,7 +2,10 @@ VERSION = v1
 
 context:
 	kubectl config use-context docker-desktop
+	
+namespace:	
 	kubectl create namespace dapr-monitoring
+	kubectl create namespace argocd
 
 helm-repo:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -131,6 +134,8 @@ secrets:
 	kubectl create secret tls rabbitmq-local-tls --key="certs/rabbitmq-local.key" --cert="certs/rabbitmq-local.crt"
 	kubectl create secret tls sqlpad-local-tls --key="certs/sqlpad-local.key" --cert="certs/sqlpad-local.crt"
 	kubectl -n kubernetes-dashboard create secret tls kd-local-tls --key="certs/kd-local.key" --cert="certs/kd-local.crt"
+	kubectl -n argocd create secret tls argocd-local-tls --key="certs/argocd-local.key" --cert="certs/argocd-local.crt"
+	kubectl -n argocd create secret tls argocd-server-tls --key="certs/argocd-local.key" --cert="certs/argocd-local.crt"
 
 rm-secrets:
 	kubectl delete secret dapr-local-tls -n dapr-system
@@ -140,7 +145,24 @@ rm-secrets:
 	kubectl delete secret rabbitmq-local-tls
 	kubectl delete secret sqlpad-local-tls
 	kubectl delete secret -n kubernetes-dashboard kd-local-tls
+	kubectl delete secret -n argocd argocd-local-tls
+	kubectl delete secret -n argocd argocd-server-tls
 
 get-token:
 	kubectl -n kubernetes-dashboard create token admin-user
 
+# kubectl create namespace argocd
+argocd:
+	kubectl apply -n argocd -f argocd-install.yml
+
+rm-argocd:
+	kubectl delete -n argocd -f argocd-install.yml
+
+argocd-ingress:
+	kubectl apply -f argocd-ingress.yml
+
+rm-argocd-ingress:
+	kubectl delete -f argocd-ingress.yml
+
+argocd-password:
+	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
