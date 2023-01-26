@@ -2,7 +2,10 @@ VERSION = v1
 
 context:
 	kubectl config use-context kubernetes-admin@kubernetes
+
+namespace:	
 	kubectl create namespace dapr-monitoring
+	kubectl create namespace argocd
 
 helm-repo:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -144,6 +147,12 @@ api:
 rm-api:
 	kubectl delete -f imagegallery-api.yml
 
+# make scale-api REPLICAS=2
+REPLICAS = 1
+
+scale-api:
+	kubectl scale deployment imagegallery-api-app --replicas=$(REPLICAS)
+
 client:
 	kubectl apply -f imagegallery-client.yml
 
@@ -174,6 +183,8 @@ secrets:
 	kubectl create secret tls sqlpad-onprem-tls --key="certs/sqlpad-onprem.key" --cert="certs/sqlpad-onprem.crt"
 	kubectl create secret tls grafana-onprem-tls --key="certs/grafana-onprem.key" --cert="certs/grafana-onprem.crt" -n dapr-monitoring
 	kubectl -n kubernetes-dashboard create secret tls kd-onprem-tls --key="certs/kd-onprem.key" --cert="certs/kd-onprem.crt"
+	kubectl -n argocd create secret tls argocd-local-tls --key="certs/argocd-local.key" --cert="certs/argocd-local.crt"
+	kubectl -n argocd create secret tls argocd-server-tls --key="certs/argocd-local.key" --cert="certs/argocd-local.crt"
 
 rm-secrets:
 	kubectl delete secret seq-onprem-tls
@@ -183,6 +194,24 @@ rm-secrets:
 	kubectl delete secret sqlpad-onprem-tls
 	kubectl delete secret grafana-onprem-tls -n dapr-monitoring
 	kubectl delete secret -n kubernetes-dashboard kd-onprem-tls
+	kubectl delete secret -n argocd argocd-local-tls
+	kubectl delete secret -n argocd argocd-server-tls
 
 kd-token:
 	kubectl -n kubernetes-dashboard create token admin-user
+
+# kubectl create namespace argocd
+argocd:
+	kubectl apply -n argocd -f argocd-install.yml
+
+rm-argocd:
+	kubectl delete -n argocd -f argocd-install.yml
+
+argocd-ingress:
+	kubectl apply -f argocd-ingress.yml
+
+rm-argocd-ingress:
+	kubectl delete -f argocd-ingress.yml
+
+argocd-password:
+	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d

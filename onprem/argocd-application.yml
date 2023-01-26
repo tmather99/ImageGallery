@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: imagegallery
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/tmather99/ImageGallery.git
+    targetRevision: HEAD
+    path: k8s
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+
+  syncPolicy:
+    syncOptions:
+    - CreatNamespace=true
+
+    automated:
+      selfHeal: true
+      prune: true
