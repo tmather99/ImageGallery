@@ -103,6 +103,12 @@ api:
 rm-api:
 	kubectl delete -f imagegallery-api.yml
 
+# make scale-api REPLICAS=2
+REPLICAS = 1
+
+scale-api:
+	kubectl scale deployment imagegallery-api-app --replicas=$(REPLICAS)
+
 client:
 	kubectl apply -f imagegallery-client.yml
 

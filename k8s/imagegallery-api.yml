@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: imagegallery-api-app
-  replicas: 1
+  replicas: 3
   template:
     metadata:
       labels:
