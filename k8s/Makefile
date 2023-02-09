@@ -76,6 +76,12 @@ rm-ingress:
 	kubectl delete -f dapr-dashboard-ingress.yml
 	kubectl delete -f kd-ingress.yml
 
+dapr-install:	
+	helm upgrade --install dapr dapr/dapr --version=1.9 --namespace dapr-system --create-namespace --wait
+
+dapr-uninstall:
+	helm uninstall dapr --namespace dapr-system
+
 dapr-dashboard:
 	dapr dashboard -k -p 8888
 
