@@ -1,14 +1,30 @@
+REPO = tmather99
+
+PROJS = Marvin.IDP \
+        ImageGallery.API \
+		ImageGallery.Client \
+		globosql
+        
 build:
 	docker compose build
 
+tag:
+	$(foreach proj,$(PROJS),docker tag $(proj) $(REPO)/$(proj) &)
+
 push:
-	docker compose push
+	$(foreach proj,$(PROJS),docker push $(REPO)/$(proj) &)
 
 up:
 	docker compose up
 
 down:
 	docker compose down
+
+clean:
+	kubectl delete pvc --all 
+	kubectl delete pv --all 
+	docker system prune -f
+	docker volume prune -f
 
 idp:
 	docker compose up idp

@@ -2,7 +2,8 @@ version: '3.4'
 
 services:
   idp:
-    image: ${DOCKER_REGISTRY}/imagegallery-idp:${VERSION}
+    image: imagegallery-idp:${VERSION}
+    container_name: 'idp'
     build:
       context: .
       dockerfile: Marvin.IDP/Dockerfile
@@ -11,6 +12,7 @@ services:
 
   idp-dapr:
     image: "daprio/daprd:edge"
+    container_name: 'idp-dapr'
     command: [ "./daprd", "--app-id", "idp", "--app-port", "443", "--placement-host-address", "placement:50006", "--components-path", "/components", "--app-ssl"  ]
     volumes:
         - ./components/:/components:ro
@@ -21,7 +23,8 @@ services:
       - network
 
   api:
-    image: ${DOCKER_REGISTRY}/imagegallery-api:${VERSION}
+    image: imagegallery-api:${VERSION}
+    container_name: 'api'
     build:
       context: .
       dockerfile: ImageGallery.API/Dockerfile
@@ -30,6 +33,7 @@ services:
 
   api-dapr:
     image: "daprio/daprd:edge"
+    container_name: 'api-dapr'
     command: [ "./daprd", "--app-id", "api", "--app-port", "443", "--placement-host-address", "placement:50006", "--components-path", "/components", "--app-ssl" ]
     volumes:
         - ./components/:/components:ro
@@ -39,6 +43,7 @@ services:
 
   client:
     image: ${DOCKER_REGISTRY}/imagegallery-client:${VERSION}
+    container_name: 'client'
     build:
       context: .
       dockerfile: ImageGallery.Client/Dockerfile
@@ -47,6 +52,7 @@ services:
 
   client-dapr:
     image: "daprio/daprd:edge"
+    container_name: 'client-dapr'
     command: [ "./daprd", "--app-id", "client", "--app-port", "443", "--placement-host-address", "placement:50006", "--components-path", "/components", "--app-ssl" ]
     volumes:
         - ./components/:/components:ro
@@ -57,7 +63,8 @@ services:
       - network
 
   globosql:
-    image: ${DOCKER_REGISTRY}/imagegallery-sql:${VERSION}
+    image: imagegallery-sql:${VERSION}
+    container_name: 'globosql'
     build:
       context: .
       dockerfile: mssql/Dockerfile
@@ -65,6 +72,7 @@ services:
   
   sqlpad:
     image: sqlpad/sqlpad
+    container_name: 'sqlpad'
     environment:
       - SQLPAD_ADMIN=admin
       - SQLPAD_ADMIN_PASSWORD=admin
@@ -77,6 +85,7 @@ services:
 
   redis-commander:
     image: rediscommander/redis-commander
+    container_name: 'redis-commander'
     environment:
       - REDIS_HOST=redis-host
       - REDIS_PORT="6379"
@@ -88,6 +97,7 @@ services:
 
   redis-statestore:
     image: "redis"
+    container_name: 'redis-statestore'
     hostname: redis-host
     ports:
       - "6379:6379"
@@ -112,6 +122,7 @@ services:
 
   placement:
     image: "daprio/dapr"
+    container_name: 'placement'
     command: ["./placement", "--port", "50006"]
     ports:
       - "50006:50006"
