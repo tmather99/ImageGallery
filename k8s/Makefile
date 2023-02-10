@@ -1,46 +1,72 @@
 VERSION = v1
 
-context:
+.PHONY: ingress sql
+
+login:
+	docker login
+
+get-contexts:
+	kubectl config get-contexts
+
+use-context-desktop:
 	kubectl config use-context docker-desktop
-	
-namespace:	
+
+use-context-onprem:
+	kubectl config use-context kubernetes-admin@kubernetes
+
+context: use-context-desktop
+
+clean:
+	kubectl delete pvc --all 
+	kubectl delete pv --all 
+	docker system prune -f
+	docker volume prune -f
+
+ns:	
 	kubectl create namespace dapr-monitoring
 	kubectl create namespace argocd
 
-helm-repo:
+helm-repos:
 	helm repo add bitnami https://charts.bitnami.com/bitnami
 	helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 	helm repo add grafana https://grafana.github.io/helm-charts
 	helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
+	helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 	helm repo update
 
-dashboard:
+kd:
 	kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
 	kubectl apply -f https://gist.githubusercontent.com/dahlsailrunner/bbd453f3bb6259b66c08a70d0908283f/raw/5727723217e2df4b65d8933adf04d009cfb0fe3f/local-dashboard-account.yml
 
-rm-dashboard:
+rm-kd:
 	kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
 	kubectl delete -f https://gist.githubusercontent.com/dahlsailrunner/bbd453f3bb6259b66c08a70d0908283f/raw/5727723217e2df4b65d8933adf04d009cfb0fe3f/local-dashboard-account.yml
 
+kd-install:
+	helm install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard
+
+kd-uninstall:
+	helm delete kubernetes-dashboard
+
 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/cloud/deploy.yaml
 nginx:
-	kubectl apply -f ingress-nginx-controller-v1.4.0.yml
+	kubectl apply -f ingress/nginx-controller-v1.4.0.yml
 
 rm-nginx:
-	kubectl delete -f ingress-nginx-controller-v1.4.0.yml
+	kubectl delete -f ingress/nginx-controller-v1.4.0.yml
 
 seq:
-	kubectl apply -f seq.yml
+	kubectl apply -f utils/seq.yml
 
 rm-seq:
-	kubectl delete -f seq.yml
+	kubectl delete -f utils/seq.yml
 
 zipkin:
-	kubectl apply -f zipkin.yml
+	kubectl apply -f utils/zipkin.yml
 	kubectl apply -f dapr/tracing.yml
 
 rm-zipkin:
-	kubectl delete -f zipkin.yml
+	kubectl delete -f utils/zipkin.yml
 	kubectl delete -f dapr/tracing.yml
 
 # helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -52,10 +78,10 @@ rm-redis:
 	helm delete redis	
 
 redis-commander:
-	kubectl apply -f redis-commander.yml
+	kubectl apply -f utils/redis-commander.yml
 
 rm-redis-commander:
-	kubectl delete -f redis-commander.yml
+	kubectl delete -f utils/redis-commander.yml
 
 # helm repo add bitnami https://charts.bitnami.com/bitnami
 rabbitmq:
@@ -67,23 +93,20 @@ rm-rabbitmq:
 	helm delete rabbitmq
 
 ingress:
-	kubectl apply -f imagegallery-ingress.yml
-	kubectl apply -f dapr-dashboard-ingress.yml
-	kubectl apply -f kd-ingress.yml
+	kubectl apply -f ingress/imagegallery.yml
+	kubectl apply -f ingress/dapr-dashboard.yml
+	kubectl apply -f ingress/kd.yml
 
 rm-ingress:
-	kubectl delete -f imagegallery-ingress.yml
-	kubectl delete -f dapr-dashboard-ingress.yml
-	kubectl delete -f kd-ingress.yml
+	kubectl delete -f ingress/imagegallery.yml
+	kubectl delete -f ingress/dapr-dashboard.yml
+	kubectl delete -f ingress/kd.yml
 
 dapr-install:	
 	helm upgrade --install dapr dapr/dapr --version=1.9 --namespace dapr-system --create-namespace --wait
 
 dapr-uninstall:
 	helm uninstall dapr --namespace dapr-system
-
-dapr-dashboard:
-	dapr dashboard -k -p 8888
 
 dapr-statestore:
 	kubectl apply -f dapr/statestore.yml
@@ -98,16 +121,16 @@ rm-dapr-pubsub-rabbitmq:
 	kubectl delete -f dapr/pubsub-rabbitmq.yml
 
 idp:
-	kubectl apply -f imagegallery-idp.yml
+	kubectl apply -f apps/imagegallery-idp.yml
 
 rm-idp:
-	kubectl delete -f imagegallery-idp.yml
+	kubectl delete -f apps/imagegallery-idp.yml
 
 api:
-	kubectl apply -f imagegallery-api.yml
+	kubectl apply -f apps/imagegallery-api.yml
 
 rm-api:
-	kubectl delete -f imagegallery-api.yml
+	kubectl delete -f apps/imagegallery-api.yml
 
 # make scale-api REPLICAS=2
 REPLICAS = 1
@@ -116,22 +139,22 @@ scale-api:
 	kubectl scale deployment imagegallery-api-app --replicas=$(REPLICAS)
 
 client:
-	kubectl apply -f imagegallery-client.yml
+	kubectl apply -f apps/imagegallery-client.yml
 
 rm-client:
-	kubectl delete -f imagegallery-client.yml
+	kubectl delete -f apps/imagegallery-client.yml
 
 sql:
-	kubectl apply -f imagegallery-sql.yml
+	kubectl apply -f sql/imagegallery-sql.yml
 
 rm-sql:
-	kubectl delete -f imagegallery-sql.yml
+	kubectl delete -f sql/imagegallery-sql.yml
 
 sqlpad:
-	kubectl apply -f sqlpad.yml
+	kubectl apply -f sql/sqlpad.yml
 
 rm-sqlpad:
-	kubectl delete -f sqlpad.yml
+	kubectl delete -f sql/sqlpad.yml
 
 up: sql idp api client
 
@@ -165,22 +188,17 @@ get-token:
 
 # kubectl create namespace argocd
 argocd:
-	kubectl apply -n argocd -f argocd-install.yml
+	kubectl apply -n argocd -f argocd/install.yml
 
 rm-argocd:
-	kubectl delete -n argocd -f argocd-install.yml
+	kubectl delete -n argocd -f argocd/install.yml
 
 argocd-ingress:
-	kubectl apply -f argocd-ingress.yml
+	kubectl apply -f ingress/argocd.yml
 
 rm-argocd-ingress:
-	kubectl delete -f argocd-ingress.yml
+	kubectl delete -f ingress/argocd.yml
 
 argocd-password:
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
-argocd-application:
-	kubectl apply -f argocd-application.yml
-
-rm-argocd-application:
-	kubectl delete -f argocd-application.yml

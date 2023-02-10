@@ -1,0 +1,19 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: common
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://stash.air-watch.com/scm/apal/jedi.git'
+    path: k8s/dev/common
+    targetRevision: feature/argocd
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: default
+  syncPolicy:
+    syncOptions:
+    - CreatNamespace=true
+    automated:
+      selfHeal: true

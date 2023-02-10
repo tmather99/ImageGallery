@@ -3,7 +3,7 @@ VERSION = v1
 context:
 	kubectl config use-context kubernetes-admin@kubernetes
 
-namespace:	
+ns:	
 	kubectl create namespace dapr-monitoring
 	kubectl create namespace argocd
 
