@@ -106,7 +106,7 @@ rm-ingress:
 	-kubectl delete -f ingress/imagegallery.yml
 
 dapr-install:	
-	helm upgrade --install dapr dapr/dapr --version=1.9 --namespace dapr-system --create-namespace --wait
+	helm upgrade --install dapr dapr/dapr --version=1.9.6 --namespace dapr-system --create-namespace --wait
 
 dapr-uninstall:
 	-helm uninstall dapr --namespace dapr-system

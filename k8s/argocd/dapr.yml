@@ -12,8 +12,17 @@ spec:
   destination:
     server: 'https://kubernetes.default.svc'
     namespace: dapr-system
+  ignoreDifferences:
+    - group: ""
+      kind: Secret
+      name: dapr-trust-bundle
+      namespace: dapr-system
+      jsonPointers:
+        - /data
+        - /stringData        
   syncPolicy:
     syncOptions:  
     - CreatNamespace=true
+    - RespectIgnoreDifferences=true
     automated:
       selfHeal: true
