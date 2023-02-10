@@ -31,6 +31,7 @@ init: \
 ns:	
 	kubectl apply -f namespaces/dapr-monitoring.yml
 	kubectl apply -f namespaces/argocd.yml
+	kubectl apply -f namespaces/kubernetes-dashboard.yml
 
 rm-ns:	
 	-kubectl delete -f namespaces/dapr-monitoring.yml
@@ -136,16 +137,16 @@ rm-dapr: rm-dapr-statestore \
 	     rm-dapr-tracing
 
 idp:
-	kubectl apply -f apps/imagegallery-idp.yml
+	kubectl apply -f imagegallery/idp.yml
 
 rm-idp:
-	-kubectl delete -f apps/imagegallery-idp.yml
+	-kubectl delete -f imagegallery/idp.yml
 
 api:
-	kubectl apply -f apps/imagegallery-api.yml
+	kubectl apply -f imagegallery/api.yml
 
 rm-api:
-	-kubectl delete -f apps/imagegallery-api.yml
+	-kubectl delete -f imagegallery/api.yml
 
 # make scale-api REPLICAS=2
 REPLICAS = 1
@@ -154,16 +155,16 @@ scale-api:
 	kubectl scale deployment imagegallery-api-app --replicas=$(REPLICAS)
 
 client:
-	kubectl apply -f apps/imagegallery-client.yml
+	kubectl apply -f imagegallery/client.yml
 
 rm-client:
-	-kubectl delete -f apps/imagegallery-client.yml
+	-kubectl delete -f imagegallery/client.yml
 
 sql:
-	kubectl apply -f sql/imagegallery-sql.yml
+	kubectl apply -f sql/imagegallery.yml
 
 rm-sql:
-	-kubectl delete -f sql/imagegallery-sql.yml
+	-kubectl delete -f sql/imagegallery.yml
 
 sqlpad:
 	kubectl apply -f sql/sqlpad.yml
@@ -255,12 +256,15 @@ argocd-uninstall:
 argocd-password:
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 
+imagegallery-repo-secret:
+	kubectl apply -f argocd/imagegallery-repo-secret.yml
+
+rm-imagegallery-repo-secret:
+	kubectl delete -f argocd/imagegallery-repo-secret.yml
 
 
 
-jedi-repo-secret:
-	kubectl apply -f argocd/jedi-repo-secret.yml
-	
+
 argocd-deploy-dapr:
 	kubectl apply -f argocd/dapr.yml
 	
@@ -273,8 +277,8 @@ argocd-deploy-rabbitmq:
 argocd-deploy-sql:
 	kubectl apply -f argocd/sql.yml
 
-argocd-deploy-common:
-	kubectl apply -f argocd/common.yml
+argocd-deploy-utils:
+	kubectl apply -f argocd/utils.yml
 
 argocd-deploy-apps:
 	kubectl apply -f argocd/apps.yml
@@ -296,9 +300,9 @@ argocd-undeploy-sql:
 	kubectl patch app -n argocd sql  -p '{"metadata": {"finalizers": ["resources-finalizer.argocd.argoproj.io"]}}' --type merge
 	kubectl delete app -n argocd sql
 
-argocd-undeploy-common:
-	kubectl patch app -n argocd common  -p '{"metadata": {"finalizers": ["resources-finalizer.argocd.argoproj.io"]}}' --type merge
-	kubectl delete app -n argocd common
+argocd-undeploy-utils:
+	kubectl patch app -n argocd utils  -p '{"metadata": {"finalizers": ["resources-finalizer.argocd.argoproj.io"]}}' --type merge
+	kubectl delete app -n argocd utils
 
 argocd-undeploy-apps:
 	kubectl patch app -n argocd apps  -p '{"metadata": {"finalizers": ["resources-finalizer.argocd.argoproj.io"]}}' --type merge
@@ -309,12 +313,12 @@ argocd-deploy: \
 	argocd-deploy-dapr \
 	argocd-deploy-redis \
 	argocd-deploy-rabbitmq \
-	argocd-deploy-common \
+	argocd-deploy-utils \
 	argocd-deploy-apps
 
 argocd-undeploy:
 	argocd-undeploy-dapr \
 	argocd-undeploy-redis \
 	argocd-undeploy-rabbitmq \
-	argocd-undeploy-common \
+	argocd-undeploy-utils \
 	argocd-undeploy-apps
