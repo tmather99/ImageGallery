@@ -8,6 +8,12 @@ PROJS = Marvin.IDP \
 build:
 	docker compose build
 
+build-device:
+	cd DeviceClient && dotnet build
+
+enroll:
+	.\DeviceClient\bin\Debug\net7.0\DeviceClient.exe
+
 tag:
 	$(foreach proj,$(PROJS),docker tag $(proj) $(REPO)/$(proj) &)
 
@@ -74,7 +80,7 @@ rm-rabbitmq:
 
 # dotnet tool install --global dotnet-ef
 ef-update:
-	cd ./Marvin.IDP && dotnet ef database update && cd ..
+	cd ./Marvin.IDP && dotnet ef database update
 	cd ./ImageGallery.API && dotnet ef database update
 
 dapr-sidecar: 
