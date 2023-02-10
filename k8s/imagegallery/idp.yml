@@ -15,7 +15,6 @@ spec:
         dapr.io/enabled: "true"
         dapr.io/app-id: "imagegallery-idp"
         dapr.io/app-port: "443"
-        dapr.io/app-ssl: "true"
         dapr.io/enable-metrics: "true"
         dapr.io/metrics-port: "9090"        
     spec:      

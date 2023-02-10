@@ -43,6 +43,7 @@ helm-repos:
 	helm repo add grafana https://grafana.github.io/helm-charts
 	helm repo add metrics-server https://kubernetes-sigs.github.io/metrics-server/
 	helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
+	helm repo add dapr https://dapr.github.io/helm-charts/
 	helm repo update
 
 kd:
@@ -280,8 +281,8 @@ argocd-deploy-sql:
 argocd-deploy-utils:
 	kubectl apply -f argocd/utils.yml
 
-argocd-deploy-apps:
-	kubectl apply -f argocd/apps.yml
+argocd-deploy-imagegallery:
+	kubectl apply -f argocd/imagegallery.yml
 
 
 argocd-undeploy-dapr:
@@ -304,9 +305,9 @@ argocd-undeploy-utils:
 	kubectl patch app -n argocd utils  -p '{"metadata": {"finalizers": ["resources-finalizer.argocd.argoproj.io"]}}' --type merge
 	kubectl delete app -n argocd utils
 
-argocd-undeploy-apps:
-	kubectl patch app -n argocd apps  -p '{"metadata": {"finalizers": ["resources-finalizer.argocd.argoproj.io"]}}' --type merge
-	kubectl delete app -n argocd apps
+argocd-undeploy-imagegallery:
+	kubectl patch app -n argocd imagegallery  -p '{"metadata": {"finalizers": ["resources-finalizer.argocd.argoproj.io"]}}' --type merge
+	kubectl delete app -n argocd imagegallery
 
 
 argocd-deploy: \
