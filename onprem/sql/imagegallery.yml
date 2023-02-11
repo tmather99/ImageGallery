@@ -39,6 +39,3 @@ spec:
     - protocol: TCP
       port: 1433
       targetPort: 1433
-  type: LoadBalancer
-  externalIPs:
-    - 192.168.1.10

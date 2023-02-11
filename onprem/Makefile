@@ -77,7 +77,7 @@ storage:
 # kubectl patch pv  storage-dapr-prom-alertmanager -p '{"metadata":{"finalizers":null}}'
 # kubectl patch pvc storage-dapr-prom-alertmanager-0 -n dapr-monitoring -p '{"metadata":{"finalizers":null}}'
 rm-storage:
-	kubectl delete -f pv-pvc.yml
+	kubectl delete -f storage/pv-pvc.yml
 
 redis:
 	helm install redis bitnami/redis
