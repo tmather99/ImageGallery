@@ -21,7 +21,7 @@ spec:
         dapr.io/metrics-port: "9090"        
     spec:      
       hostAliases:
-      - ip: "10.62.35.49"
+      - ip: "192.168.1.10"
         hostnames:
         - "idp.imagegallery.com"
         - "api.imagegallery.com"
@@ -67,7 +67,7 @@ spec:
     app: imagegallery-idp-app  
   type: LoadBalancer  
   externalIPs:
-    - 10.62.35.49
+    - 192.168.1.10
   ports:
     - protocol: TCP 
       port: 5001

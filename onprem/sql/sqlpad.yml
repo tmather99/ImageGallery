@@ -13,7 +13,7 @@ spec:
         app: sqlpad-app
     spec:      
       hostAliases:
-      - ip: "10.62.35.49"
+      - ip: "192.168.1.10"
         hostnames:
         - "sql.imagegallery.com"
       containers:

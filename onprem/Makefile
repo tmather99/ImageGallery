@@ -3,9 +3,6 @@ CERT_TLS = onprem-tls.yml
 
 .PHONY: ingress sql storage
 
-login:
-	docker login
-
 get-contexts:
 	kubectl config get-contexts
 
@@ -246,7 +243,7 @@ nginx:
 rm-nginx:
 	-kubectl delete -f ingress/nginx-controller-v1.4.0.yml
 
-# kubectl create secret tls imagegallery-api-local-tls --key="../https/api-imagegallery.key" --cert="../https/api-imagegallery.crt" --dry-run=client -o yaml
+# kubectl create secret tls imagegallery-api-onprem-tls --key="../../https/api-imagegallery.key" --cert="../../https/api-imagegallery.crt" --dry-run=client -o yaml
 apps-secrets:
 	kubectl apply -f tls-secrets/imagegallery-idp-$(CERT_TLS)
 	kubectl apply -f tls-secrets/imagegallery-api-$(CERT_TLS)
@@ -257,7 +254,7 @@ rm-apps-secrets:
 	kubectl delete -f tls-secrets/imagegallery-api-$(CERT_TLS)
 	kubectl delete -f tls-secrets/imagegallery-client-$(CERT_TLS)
 
-# kubectl create secret tls dapr-local-tls --key="certs/dapr-local.key" --cert="certs/dapr-local.crt" -n dapr-system --dry-run=client -o yaml
+# kubectl create secret tls dapr-onprem-tls --key="certs/dapr-onprem.key" --cert="certs/dapr-onprem.crt" -n dapr-system --dry-run=client -o yaml
 secrets: apps-secrets
 	kubectl apply -f tls-secrets/dapr-$(CERT_TLS)
 	kubectl apply -f tls-secrets/grafana-$(CERT_TLS)
