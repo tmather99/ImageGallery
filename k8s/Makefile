@@ -36,6 +36,7 @@ ns:
 rm-ns:	
 	-kubectl delete -f namespaces/dapr-monitoring.yml
 	-kubectl delete -f namespaces/argocd.yml
+	-kubectl delete -f namespaces/kubernetes-dashboard.yml
 
 helm-repos:
 	helm repo add bitnami https://charts.bitnami.com/bitnami

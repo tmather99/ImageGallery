@@ -291,3 +291,198 @@ spec:
       storage: 8Gi
   volumeName: data-rabbitmq-2
 
+
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-redis-onprem-master
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  nfs:
+    server: node-storage
+    path: "/export/volumes/data-redis-onprem-master"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data-redis-onprem-master-0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  volumeName: data-redis-onprem-master
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-redis-onprem-replicas-0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  nfs:
+    server: node-storage
+    path: "/export/volumes/data-redis-onprem-replicas-0"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data-redis-onprem-replicas-0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  volumeName: data-redis-onprem-replicas-0
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-redis-onprem-replicas-1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  nfs:
+    server: node-storage
+    path: "/export/volumes/data-redis-onprem-replicas-1"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data-redis-onprem-replicas-1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  volumeName: data-redis-onprem-replicas-1
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-redis-onprem-replicas-2
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  nfs:
+    server: node-storage
+    path: "/export/volumes/data-redis-onprem-replicas-2"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-data-redis-onprem-replicas-2
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  volumeName: data-redis-onprem-replicas-2
+
+
+
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-rabbitmq-onprem-0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  nfs:
+    server: node-storage
+    path: "/export/volumes/data-rabbitmq-onprem-0"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-rabbitmq-onprem-0
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  volumeName: data-rabbitmq-onprem-0
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-rabbitmq-onprem-1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  nfs:
+    server: node-storage
+    path: "/export/volumes/data-rabbitmq-onprem-1"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-rabbitmq-onprem-1
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  volumeName: data-rabbitmq-onprem-1
+
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: data-rabbitmq-onprem-2
+spec:
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 8Gi
+  nfs:
+    server: node-storage
+    path: "/export/volumes/data-rabbitmq-onprem-2"
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data-rabbitmq-onprem-2
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 8Gi
+  volumeName: data-rabbitmq-onprem-2
+
