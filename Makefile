@@ -1,9 +1,10 @@
 REPO = tmather99
+VERSION = v1
 
-PROJS = Marvin.IDP \
-        ImageGallery.API \
-		ImageGallery.Client \
-		globosql
+PROJS = idp \
+        api \
+		client \
+		sql
         
 build:
 	docker compose build
@@ -15,10 +16,10 @@ enroll:
 	.\DeviceClient\bin\Debug\net7.0\DeviceClient.exe
 
 tag:
-	$(foreach proj,$(PROJS),docker tag $(proj) $(REPO)/$(proj) &)
+	$(foreach proj,$(PROJS),docker tag imagegallery-$(proj):$(VERSION) $(REPO)/imagegallery-$(proj):$(VERSION) &)
 
 push:
-	$(foreach proj,$(PROJS),docker push $(REPO)/$(proj) &)
+	$(foreach proj,$(PROJS),docker push $(REPO)/imagegallery-$(proj):$(VERSION) &)
 
 up:
 	docker compose up

@@ -42,7 +42,7 @@ services:
     network_mode: "service:api" 
 
   client:
-    image: ${DOCKER_REGISTRY}/imagegallery-client:${VERSION}
+    image: imagegallery-client:${VERSION}
     container_name: 'client'
     build:
       context: .

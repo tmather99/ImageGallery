@@ -29,6 +29,7 @@ init: \
 	nginx
 
 ns:	
+	kubectl apply -f namespaces/dapr-system.yml
 	kubectl apply -f namespaces/dapr-monitoring.yml
 	kubectl apply -f namespaces/argocd.yml
 	kubectl apply -f namespaces/kubernetes-dashboard.yml
@@ -176,7 +177,7 @@ rm-sqlpad:
 
 up: dapr sql idp api client
 
-down: rm-sql rm-idp rm-api rm-client
+down: rm-idp rm-api rm-client
 
 down-all: \
 	down \
@@ -316,11 +317,11 @@ argocd-deploy: \
 	argocd-deploy-redis \
 	argocd-deploy-rabbitmq \
 	argocd-deploy-utils \
-	argocd-deploy-apps
+	argocd-deploy-imagegallery
 
 argocd-undeploy:
 	argocd-undeploy-dapr \
 	argocd-undeploy-redis \
 	argocd-undeploy-rabbitmq \
 	argocd-undeploy-utils \
-	argocd-undeploy-apps
+	argocd-undeploy-imagegallery
