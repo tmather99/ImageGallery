@@ -24,11 +24,13 @@ init: \
 	nginx
 
 ns:	
+	kubectl apply -f namespaces/dapr-system.yml
 	kubectl apply -f namespaces/dapr-monitoring.yml
 	kubectl apply -f namespaces/argocd.yml
 	kubectl apply -f namespaces/kubernetes-dashboard.yml
 
 rm-ns:	
+	-kubectl delete -f namespaces/dapr-system.yml
 	-kubectl delete -f namespaces/dapr-monitoring.yml
 	-kubectl delete -f namespaces/argocd.yml
 	-kubectl delete -f namespaces/kubernetes-dashboard.yml

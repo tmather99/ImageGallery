@@ -48,19 +48,11 @@ helm-repos:
 	helm repo add dapr https://dapr.github.io/helm-charts/
 	helm repo update
 
-kd:
-	kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
-	kubectl apply -f https://gist.githubusercontent.com/dahlsailrunner/bbd453f3bb6259b66c08a70d0908283f/raw/5727723217e2df4b65d8933adf04d009cfb0fe3f/local-dashboard-account.yml
-
-rm-kd:
-	-kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
-	-kubectl delete -f https://gist.githubusercontent.com/dahlsailrunner/bbd453f3bb6259b66c08a70d0908283f/raw/5727723217e2df4b65d8933adf04d009cfb0fe3f/local-dashboard-account.yml
-
 kd-install:
-	helm install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard
+	helm install kd kubernetes-dashboard/kubernetes-dashboard -n kubernetes-dashboard
 
 kd-uninstall:
-	helm delete kubernetes-dashboard
+	helm delete kd -n kubernetes-dashboard
 
 kd-token:
 	-kubectl -n kubernetes-dashboard create token admin-user
@@ -101,11 +93,13 @@ ingress:
 	kubectl apply -f ingress/kd.yml
 	kubectl apply -f ingress/dapr-dashboard.yml
 	kubectl apply -f ingress/imagegallery.yml
+	kubectl apply -f ingress/grafana.yml
 
 rm-ingress:
 	-kubectl delete -f ingress/kd.yml
 	-kubectl delete -f ingress/dapr-dashboard.yml
 	-kubectl delete -f ingress/imagegallery.yml
+	-kubectl delete -f ingress/grafana.yml
 
 dapr-install:	
 	helm upgrade --install dapr dapr/dapr --version=1.9.6 --namespace dapr-system --create-namespace --wait
@@ -200,10 +194,10 @@ ef-update:
 
 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/cloud/deploy.yaml
 nginx:
-	kubectl apply -f ingress/nginx-controller-v1.4.0.yml
+	kubectl apply -f ingress/nginx-controller-v1.5.1.yml
 
 rm-nginx:
-	-kubectl delete -f ingress/nginx-controller-v1.4.0.yml
+	-kubectl delete -f ingress/nginx-controller-v1.5.1.yml
 
 # kubectl create secret tls imagegallery-api-local-tls --key="../https/api-imagegallery.key" --cert="../https/api-imagegallery.crt" --dry-run=client -o yaml
 apps-secrets:
@@ -218,6 +212,7 @@ rm-apps-secrets:
 
 # kubectl create secret tls dapr-local-tls --key="certs/dapr-local.key" --cert="certs/dapr-local.crt" -n dapr-system --dry-run=client -o yaml
 secrets: apps-secrets
+	kubectl apply -f tls-secrets/kd-$(CERT_TLS)
 	kubectl apply -f tls-secrets/dapr-$(CERT_TLS)
 	kubectl apply -f tls-secrets/grafana-$(CERT_TLS)
 	kubectl apply -f tls-secrets/rabbitmq-$(CERT_TLS)
@@ -228,6 +223,7 @@ secrets: apps-secrets
 
 # kubectl delete secret dapr-local-tls -n dapr-system
 rm-secrets: rm-apps-secrets
+	kubectl delete -f tls-secrets/kd-$(CERT_TLS)
 	kubectl delete -f tls-secrets/dapr-$(CERT_TLS)
 	kubectl delete -f tls-secrets/grafana-$(CERT_TLS)
 	kubectl delete -f tls-secrets/rabbitmq-$(CERT_TLS)
@@ -235,6 +231,32 @@ rm-secrets: rm-apps-secrets
 	kubectl delete -f tls-secrets/seq-$(CERT_TLS)
 	kubectl delete -f tls-secrets/sqlpad-$(CERT_TLS)
 	kubectl delete -f tls-secrets/zipkin-$(CERT_TLS)
+
+
+prometheus:
+	helm install dapr-prom prometheus-community/prometheus -n dapr-monitoring
+	kubectl patch ds dapr-prom-prometheus-node-exporter \
+	   --type "json" -p '[{"op": "remove", "path" : "/spec/template/spec/containers/0/volumeMounts/2/mountPropagation"}]' \
+	   -n dapr-monitoring	
+
+
+rm-prometheus::
+	helm delete dapr-prom -n dapr-monitoring 
+
+# helm repo add grafana https://grafana.github.io/helm-charts
+# helm repo update
+# https://github.com/RicardoNiepel/dapr-docs/blob/master/howto/setup-monitoring-tools/setup-prometheus-grafana.md
+# http://dapr-prom-prometheus-server.dapr-monitoring
+grafana:
+	helm install grafana grafana/grafana -n dapr-monitoring
+
+rm-grafana:
+	helm delete grafana -n dapr-monitoring
+
+grafana-password:
+	kubectl get secret --namespace dapr-monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode
+
+
 
 argocd-ingress:
 	kubectl apply -f ingress/argocd.yml
