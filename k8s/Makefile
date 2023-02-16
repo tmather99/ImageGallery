@@ -215,6 +215,7 @@ secrets: apps-secrets
 	kubectl apply -f tls-secrets/kd-$(CERT_TLS)
 	kubectl apply -f tls-secrets/dapr-$(CERT_TLS)
 	kubectl apply -f tls-secrets/grafana-$(CERT_TLS)
+	kubectl apply -f tls-secrets/prometheus-$(CERT_TLS)
 	kubectl apply -f tls-secrets/rabbitmq-$(CERT_TLS)
 	kubectl apply -f tls-secrets/redis-$(CERT_TLS)
 	kubectl apply -f tls-secrets/seq-$(CERT_TLS)
@@ -226,6 +227,7 @@ rm-secrets: rm-apps-secrets
 	kubectl delete -f tls-secrets/kd-$(CERT_TLS)
 	kubectl delete -f tls-secrets/dapr-$(CERT_TLS)
 	kubectl delete -f tls-secrets/grafana-$(CERT_TLS)
+	kubectl delete -f tls-secrets/prometheus-$(CERT_TLS)
 	kubectl delete -f tls-secrets/rabbitmq-$(CERT_TLS)
 	kubectl delete -f tls-secrets/redis-$(CERT_TLS)
 	kubectl delete -f tls-secrets/seq-$(CERT_TLS)
@@ -255,7 +257,6 @@ rm-grafana:
 
 grafana-password:
 	kubectl get secret --namespace dapr-monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode
-
 
 
 argocd-ingress:
