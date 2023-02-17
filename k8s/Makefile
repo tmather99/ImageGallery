@@ -250,13 +250,13 @@ rm-prometheus::
 # https://github.com/RicardoNiepel/dapr-docs/blob/master/howto/setup-monitoring-tools/setup-prometheus-grafana.md
 # http://dapr-prom-prometheus-server.dapr-monitoring
 grafana:
-	helm install grafana grafana/grafana -n dapr-monitoring
+	helm install grafana bitnami/grafana -n dapr-monitoring
 
 rm-grafana:
 	helm delete grafana -n dapr-monitoring
 
 grafana-password:
-	kubectl get secret --namespace dapr-monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode
+	kubectl get secret grafana-admin --namespace dapr-monitoring -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 -d
 
 
 argocd-ingress:

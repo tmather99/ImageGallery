@@ -21,3 +21,4 @@
 /obj
 /docker-compose.dcproj.user
 /DeviceClient/bin/Debug/net7.0
+/DeviceClient/bin/Release/net7.0
