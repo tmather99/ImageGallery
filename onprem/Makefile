@@ -1,4 +1,5 @@
-VERSION = v1
+TAG = v2
+REPO = harbor-repo.vmware.com/jedi/imagegallery
 CERT_TLS = onprem-tls.yml
 
 .PHONY: ingress sql storage
@@ -18,6 +19,45 @@ clean:
 	kubectl delete pvc --all 
 	kubectl delete pv --all 
 
+build-idp:
+	kubectl build -t $(REPO)-idp:$(TAG) -f ../Marvin.IDP/Dockerfile ..
+
+build-api:
+	kubectl build -t $(REPO)-api:$(TAG) -f ../ImageGallery.API/Dockerfile ..
+
+build-client:
+	kubectl build -t $(REPO)-client:$(TAG) -f ../ImageGallery.Client/Dockerfile ..
+
+build-mssql:
+	kubectl build -t $(REPO)-sql:$(TAG) -f ../mssql/Dockerfile ..
+
+build: \
+	build-idp \
+	build-api \
+	build-client \
+	build-mssql
+
+push-idp:
+	kubectl build --push --registry-secret mysecret -t $(REPO)-idp:$(TAG) -f ../Marvin.IDP/Dockerfile ..
+
+push-api:
+	kubectl build --push --registry-secret mysecret -t $(REPO)-api:$(TAG) -f ../ImageGallery.API/Dockerfile ..
+
+push-client:
+	kubectl build --push --registry-secret mysecret -t $(REPO)-client:$(TAG) -f ../ImageGallery.Client/Dockerfile ..
+
+push-mssql:
+	kubectl build --push --registry-secret mysecret -t $(REPO)-sql:$(TAG) -f ../mssql/Dockerfile ..
+
+push: \
+	push-idp \
+	push-api \
+	push-client \
+	push-mssql
+
+login:
+	docker login harbor-repo.vmware.com
+	
 init: \
 	ns \
 	helm-repos \
@@ -44,19 +84,11 @@ helm-repos:
 	helm repo add dapr https://dapr.github.io/helm-charts/
 	helm repo update
 
-kd:
-	kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
-	kubectl apply -f https://gist.githubusercontent.com/dahlsailrunner/bbd453f3bb6259b66c08a70d0908283f/raw/5727723217e2df4b65d8933adf04d009cfb0fe3f/local-dashboard-account.yml
-
-rm-kd:
-	-kubectl delete -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.7.0/aio/deploy/recommended.yaml
-	-kubectl delete -f https://gist.githubusercontent.com/dahlsailrunner/bbd453f3bb6259b66c08a70d0908283f/raw/5727723217e2df4b65d8933adf04d009cfb0fe3f/local-dashboard-account.yml
-
 kd-install:
-	helm install kubernetes-dashboard kubernetes-dashboard/kubernetes-dashboard
+	helm install kd kubernetes-dashboard/kubernetes-dashboard -n kubernetes-dashboard
 
 kd-uninstall:
-	helm delete kubernetes-dashboard
+	helm delete kd -n kubernetes-dashboard
 
 kd-token:
 	-kubectl -n kubernetes-dashboard create token admin-user
@@ -258,8 +290,10 @@ rm-apps-secrets:
 
 # kubectl create secret tls dapr-onprem-tls --key="certs/dapr-onprem.key" --cert="certs/dapr-onprem.crt" -n dapr-system --dry-run=client -o yaml
 secrets: apps-secrets
+	kubectl apply -f tls-secrets/kd-$(CERT_TLS)
 	kubectl apply -f tls-secrets/dapr-$(CERT_TLS)
 	kubectl apply -f tls-secrets/grafana-$(CERT_TLS)
+	kubectl apply -f tls-secrets/prometheus-$(CERT_TLS)
 	kubectl apply -f tls-secrets/rabbitmq-$(CERT_TLS)
 	kubectl apply -f tls-secrets/redis-$(CERT_TLS)
 	kubectl apply -f tls-secrets/seq-$(CERT_TLS)
@@ -268,8 +302,10 @@ secrets: apps-secrets
 
 # kubectl delete secret dapr-local-tls -n dapr-system
 rm-secrets: rm-apps-secrets
+	kubectl delete -f tls-secrets/kd-$(CERT_TLS)
 	kubectl delete -f tls-secrets/dapr-$(CERT_TLS)
 	kubectl delete -f tls-secrets/grafana-$(CERT_TLS)
+	kubectl delete -f tls-secrets/prometheus-$(CERT_TLS)
 	kubectl delete -f tls-secrets/rabbitmq-$(CERT_TLS)
 	kubectl delete -f tls-secrets/redis-$(CERT_TLS)
 	kubectl delete -f tls-secrets/seq-$(CERT_TLS)

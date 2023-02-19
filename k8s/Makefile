@@ -1,11 +1,9 @@
-VERSION = v1
+TAG = v2
+REPO = harbor-repo.vmware.com/jedi/imagegallery
 CERT_TLS = local-tls.yml
 
 .PHONY: ingress sql
-
-login:
-	docker login
-
+	
 get-contexts:
 	kubectl config get-contexts
 
@@ -22,6 +20,45 @@ clean:
 	kubectl delete pv --all 
 	docker system prune -f
 	docker volume prune -f
+
+build-idp:
+	kubectl build -t $(REPO)-idp:$(TAG) -f ../Marvin.IDP/Dockerfile ..
+
+build-api:
+	kubectl build -t $(REPO)-api:$(TAG) -f ../ImageGallery.API/Dockerfile ..
+
+build-client:
+	kubectl build -t $(REPO)-client:$(TAG) -f ../ImageGallery.Client/Dockerfile ..
+
+build-mssql:
+	kubectl build -t $(REPO)-sql:$(TAG) -f ../mssql/Dockerfile ..
+
+build: \
+	build-idp \
+	build-api \
+	build-client \
+	build-mssql
+
+push-idp:
+	kubectl build --push --registry-secret mysecret -t $(REPO)-idp:$(TAG) -f ../Marvin.IDP/Dockerfile ..
+
+push-api:
+	kubectl build --push --registry-secret mysecret -t $(REPO)-api:$(TAG) -f ../ImageGallery.API/Dockerfile ..
+
+push-client:
+	kubectl build --push --registry-secret mysecret -t $(REPO)-client:$(TAG) -f ../ImageGallery.Client/Dockerfile ..
+
+push-mssql:
+	kubectl build --push --registry-secret mysecret -t $(REPO)-sql:$(TAG) -f ../mssql/Dockerfile ..
+
+push: \
+	push-idp \
+	push-api \
+	push-client \
+	push-mssql
+
+login:
+	docker login harbor-repo.vmware.com
 
 init: \
 	ns \
@@ -250,13 +287,13 @@ rm-prometheus::
 # https://github.com/RicardoNiepel/dapr-docs/blob/master/howto/setup-monitoring-tools/setup-prometheus-grafana.md
 # http://dapr-prom-prometheus-server.dapr-monitoring
 grafana:
-	helm install grafana bitnami/grafana -n dapr-monitoring
+	helm install grafana grafana/grafana -n dapr-monitoring
 
 rm-grafana:
 	helm delete grafana -n dapr-monitoring
 
 grafana-password:
-	kubectl get secret grafana-admin --namespace dapr-monitoring -o jsonpath="{.data.GF_SECURITY_ADMIN_PASSWORD}" | base64 -d
+	kubectl get secret --namespace dapr-monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode
 
 
 argocd-ingress:
