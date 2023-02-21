@@ -172,11 +172,13 @@ ingress:
 	kubectl apply -f ingress/kd.yml
 	kubectl apply -f ingress/dapr-dashboard.yml
 	kubectl apply -f ingress/imagegallery.yml
+	kubectl apply -f ingress/grafana.yml
 
 rm-ingress:
 	-kubectl delete -f ingress/kd.yml
 	-kubectl delete -f ingress/dapr-dashboard.yml
 	-kubectl delete -f ingress/imagegallery.yml
+	-kubectl delete -f ingress/grafana.yml
 
 dapr-install:	
 	helm upgrade --install dapr dapr/dapr --version=1.9.6 --namespace dapr-system --create-namespace --wait
@@ -291,9 +293,9 @@ rm-apps-secrets:
 # kubectl create secret tls dapr-onprem-tls --key="certs/dapr-onprem.key" --cert="certs/dapr-onprem.crt" -n dapr-system --dry-run=client -o yaml
 secrets: apps-secrets
 	kubectl apply -f tls-secrets/kd-$(CERT_TLS)
-	kubectl apply -f tls-secrets/dapr-$(CERT_TLS)
-	kubectl apply -f tls-secrets/grafana-$(CERT_TLS)
-	kubectl apply -f tls-secrets/prometheus-$(CERT_TLS)
+	kubectl apply -f tls-secrets/dapr-$(CERT_TLS) -n dapr-system
+	kubectl apply -f tls-secrets/grafana-$(CERT_TLS) -n dapr-monitoring
+	kubectl apply -f tls-secrets/prometheus-$(CERT_TLS) -n dapr-monitoring
 	kubectl apply -f tls-secrets/rabbitmq-$(CERT_TLS)
 	kubectl apply -f tls-secrets/redis-$(CERT_TLS)
 	kubectl apply -f tls-secrets/seq-$(CERT_TLS)
@@ -303,9 +305,9 @@ secrets: apps-secrets
 # kubectl delete secret dapr-local-tls -n dapr-system
 rm-secrets: rm-apps-secrets
 	kubectl delete -f tls-secrets/kd-$(CERT_TLS)
-	kubectl delete -f tls-secrets/dapr-$(CERT_TLS)
-	kubectl delete -f tls-secrets/grafana-$(CERT_TLS)
-	kubectl delete -f tls-secrets/prometheus-$(CERT_TLS)
+	kubectl delete -f tls-secrets/dapr-$(CERT_TLS) -n dapr-system
+	kubectl delete -f tls-secrets/grafana-$(CERT_TLS) -n dapr-monitoring
+	kubectl delete -f tls-secrets/prometheus-$(CERT_TLS) -n dapr-monitoring
 	kubectl delete -f tls-secrets/rabbitmq-$(CERT_TLS)
 	kubectl delete -f tls-secrets/redis-$(CERT_TLS)
 	kubectl delete -f tls-secrets/seq-$(CERT_TLS)
@@ -319,12 +321,12 @@ rm-argocd-ingress:
 	kubectl delete -f ingress/argocd.yml
 
 argocd-secrets:
-	kubectl apply -f tls-secrets/argocd-$(CERT_TLS)
-	kubectl apply -f tls-secrets/argocd-server-tls.yml
+	kubectl apply -f tls-secrets/argocd-$(CERT_TLS) -n argocd
+	kubectl apply -f tls-secrets/argocd-server-tls.yml -n argocd 
 
 rm-argocd-secrets:
-	kubectl delete -f tls-secrets/argocd-$(CERT_TLS)
-	kubectl delete -f tls-secrets/argocd-server-tls.yml
+	kubectl delete -f tls-secrets/argocd-$(CERT_TLS) -n argocd
+	kubectl delete -f tls-secrets/argocd-server-tls.yml -n argocd
 
 argocd-install:
 	kubectl apply -n argocd -f argocd/install.yml

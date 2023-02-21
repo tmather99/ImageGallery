@@ -7,9 +7,22 @@ spec:
   ingressClassName: nginx
   tls:
     - hosts:
+        - prometheus.local.com
+      secretName: prometheus-onprem-tls
+    - hosts:
         - grafana.onprem.com
       secretName: grafana-onprem-tls
   rules:
+    - host: prometheus.onprem.com
+      http:
+        paths:
+          - pathType: Prefix
+            path: /
+            backend:
+              service:
+                name: dapr-prom-prometheus-server
+                port:
+                  number: 80
     - host: grafana.onprem.com
       http:
         paths:
