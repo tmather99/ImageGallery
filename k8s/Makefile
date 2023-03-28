@@ -131,12 +131,14 @@ ingress:
 	kubectl apply -f ingress/dapr-dashboard.yml
 	kubectl apply -f ingress/imagegallery.yml
 	kubectl apply -f ingress/grafana.yml
+	kubectl apply -f ingress/idp.yml
 
 rm-ingress:
 	-kubectl delete -f ingress/kd.yml
 	-kubectl delete -f ingress/dapr-dashboard.yml
 	-kubectl delete -f ingress/imagegallery.yml
 	-kubectl delete -f ingress/grafana.yml
+	-kubectl delete -f ingress/idp.yml
 
 dapr-install:	
 	helm upgrade --install dapr dapr/dapr --version=1.9.6 --namespace dapr-system --create-namespace --wait
@@ -231,10 +233,10 @@ ef-update:
 
 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/cloud/deploy.yaml
 nginx:
-	kubectl apply -f ingress/nginx-controller-v1.5.1.yml
+	kubectl apply -f ingress/nginx-controller-v1.7.0.yml
 
 rm-nginx:
-	-kubectl delete -f ingress/nginx-controller-v1.5.1.yml
+	-kubectl delete -f ingress/nginx-controller-v1.7.0.yml
 
 # kubectl create secret tls imagegallery-api-local-tls --key="../https/api-imagegallery.key" --cert="../https/api-imagegallery.crt" --dry-run=client -o yaml
 apps-secrets:
@@ -258,6 +260,7 @@ secrets: apps-secrets
 	kubectl apply -f tls-secrets/seq-$(CERT_TLS)
 	kubectl apply -f tls-secrets/sqlpad-$(CERT_TLS)
 	kubectl apply -f tls-secrets/zipkin-$(CERT_TLS)
+	kubectl apply -f tls-secrets/idp-$(CERT_TLS)
 
 # kubectl delete secret dapr-local-tls -n dapr-system
 rm-secrets: rm-apps-secrets
@@ -270,6 +273,7 @@ rm-secrets: rm-apps-secrets
 	kubectl delete -f tls-secrets/seq-$(CERT_TLS)
 	kubectl delete -f tls-secrets/sqlpad-$(CERT_TLS)
 	kubectl delete -f tls-secrets/zipkin-$(CERT_TLS)
+	kubectl delete -f tls-secrets/idp-$(CERT_TLS)
 
 
 prometheus:
