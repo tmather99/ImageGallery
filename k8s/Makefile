@@ -263,6 +263,7 @@ secrets: apps-secrets
 	kubectl apply -f tls-secrets/sqlpad-$(CERT_TLS)
 	kubectl apply -f tls-secrets/zipkin-$(CERT_TLS)
 	kubectl apply -f tls-secrets/idp-$(CERT_TLS)
+	kubectl apply -f tls-secrets/api-$(CERT_TLS)
 
 # kubectl delete secret dapr-local-tls -n dapr-system
 rm-secrets: rm-apps-secrets
@@ -276,6 +277,7 @@ rm-secrets: rm-apps-secrets
 	kubectl delete -f tls-secrets/sqlpad-$(CERT_TLS)
 	kubectl delete -f tls-secrets/zipkin-$(CERT_TLS)
 	kubectl delete -f tls-secrets/idp-$(CERT_TLS)
+	kubectl delete -f tls-secrets/api-$(CERT_TLS)
 
 
 prometheus:
