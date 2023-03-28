@@ -132,6 +132,7 @@ ingress:
 	kubectl apply -f ingress/imagegallery.yml
 	kubectl apply -f ingress/grafana.yml
 	kubectl apply -f ingress/idp.yml
+	kubectl apply -f ingress/api.yml
 
 rm-ingress:
 	-kubectl delete -f ingress/kd.yml
@@ -139,6 +140,7 @@ rm-ingress:
 	-kubectl delete -f ingress/imagegallery.yml
 	-kubectl delete -f ingress/grafana.yml
 	-kubectl delete -f ingress/idp.yml
+	-kubectl delete -f ingress/api.yml
 
 dapr-install:	
 	helm upgrade --install dapr dapr/dapr --version=1.9.6 --namespace dapr-system --create-namespace --wait
