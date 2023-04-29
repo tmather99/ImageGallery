@@ -4,6 +4,15 @@ CERT_TLS = local-tls.yml
 
 .PHONY: ingress sql
 	
+#
+# cluster targets
+#
+cluster:
+	kind create cluster --name cluster --config=kind/cluster.yml
+
+rm-cluster:
+	kind delete cluster --name cluster
+
 get-contexts:
 	kubectl config get-contexts
 
@@ -63,7 +72,7 @@ login:
 init: \
 	ns \
 	helm-repos \
-	nginx
+	nginx-kind
 
 ns:	
 	kubectl apply -f namespaces/dapr-system.yml
@@ -239,6 +248,13 @@ nginx:
 
 rm-nginx:
 	-kubectl delete -f ingress/nginx-controller-v1.7.0.yml
+
+# https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+nginx-kind:
+	kubectl apply -f ingress/nginx-controller-kind-v1.7.0.yml
+
+rm-nginx-kind:
+	kubectl delete -f ingress/nginx-controller-kind-v1.7.0.yml
 
 # kubectl create secret tls imagegallery-api-local-tls --key="../https/api-imagegallery.key" --cert="../https/api-imagegallery.crt" --dry-run=client -o yaml
 apps-secrets:
