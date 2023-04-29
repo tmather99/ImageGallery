@@ -1,4 +1,4 @@
-TAG = v2
+TAG = v1
 REPO = harbor-repo.vmware.com/jedi/imagegallery
 CERT_TLS = local-tls.yml
 
