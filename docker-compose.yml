@@ -19,8 +19,6 @@ services:
     depends_on:
       - idp
     network_mode: "service:idp" 
-    networks:
-      - network
 
   api:
     image: imagegallery-api:${VERSION}
@@ -59,8 +57,6 @@ services:
     depends_on:
       - client
     network_mode: "service:client" 
-    networks:
-      - network
 
   globosql:
     image: imagegallery-sql:${VERSION}

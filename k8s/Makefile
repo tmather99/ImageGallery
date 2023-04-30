@@ -3,7 +3,15 @@ REPO = harbor-repo.vmware.com/jedi/imagegallery
 CERT_TLS = local-tls.yml
 
 .PHONY: ingress sql
-	
+	#
+# cluster targets
+#
+cluster:
+	kind create cluster --name cluster --config=kind/cluster.yml
+
+rm-cluster:
+	kind delete cluster --name cluster
+
 get-contexts:
 	kubectl config get-contexts
 
@@ -60,6 +68,7 @@ push: \
 login:
 	docker login harbor-repo.vmware.com
 
+# kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
 init: \
 	ns \
 	helm-repos \
@@ -126,6 +135,7 @@ rabbitmq:
 rm-rabbitmq:
 	-helm delete rabbitmq
 
+# kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
 ingress:
 	kubectl apply -f ingress/kd.yml
 	kubectl apply -f ingress/dapr-dashboard.yml
@@ -231,7 +241,12 @@ ef-update:
 	cd ../Marvin.IDP && dotnet ef database update
 	cd ../ImageGallery.API && dotnet ef database update
 
+# https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+nginx-kind:
+	kubectl apply -f ingress/nginx-controller-kind-v1.7.0.yml
 
+rm-nginx-kind:
+	kubectl delete -f ingress/nginx-controller-kind-v1.7.0.yml
 
 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/cloud/deploy.yaml
 nginx:
