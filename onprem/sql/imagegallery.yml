@@ -27,6 +27,20 @@ spec:
           limits:
             memory: "2048Mi"
             cpu: "2048m"  
+---               
+apiVersion: v1
+kind: Service
+metadata:
+  name: globosql-service
+spec:
+  selector:
+    app: globosql
+  ports:
+    - protocol: TCP
+      port: 1433
+      nodePort: 31433
+  type: NodePort
+
 ---
 apiVersion: v1
 kind: Service
@@ -40,5 +54,3 @@ spec:
       port: 1433
       targetPort: 1433
   type: ClusterIP
-  externalIPs:
-    - 10.62.35.13

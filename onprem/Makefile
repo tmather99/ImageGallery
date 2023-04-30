@@ -2,7 +2,16 @@ TAG = v2
 REPO = harbor-repo.vmware.com/jedi/imagegallery
 CERT_TLS = onprem-tls.yml
 
-.PHONY: ingress sql storage
+.PHONY: ingress sql
+
+#
+# cluster targets
+#
+cluster:
+	kind create cluster --name cluster --config=kind/cluster.yml
+
+rm-cluster:
+	kind delete cluster --name cluster
 
 get-contexts:
 	kubectl config get-contexts
@@ -18,6 +27,8 @@ context: use-context-onprem
 clean:
 	kubectl delete pvc --all 
 	kubectl delete pv --all 
+	docker system prune -f
+	docker volume prune -f
 
 build-idp:
 	kubectl build -t $(REPO)-idp:$(TAG) -f ../Marvin.IDP/Dockerfile ..
@@ -61,7 +72,7 @@ login:
 init: \
 	ns \
 	helm-repos \
-	nginx
+	nginx-kind
 
 ns:	
 	kubectl apply -f namespaces/dapr-system.yml
@@ -104,14 +115,6 @@ zipkin: dapr-tracing
 
 rm-zipkin: rm-dapr-tracing
 	-kubectl delete -f utils/zipkin.yml
-
-storage:
-	kubectl apply -f storage/pv-pvc.yml
-
-# kubectl patch pv  storage-dapr-prom-alertmanager -p '{"metadata":{"finalizers":null}}'
-# kubectl patch pvc storage-dapr-prom-alertmanager-0 -n dapr-monitoring -p '{"metadata":{"finalizers":null}}'
-rm-storage:
-	kubectl delete -f storage/pv-pvc.yml
 
 redis:
 	helm install redis bitnami/redis
@@ -167,8 +170,8 @@ metrics-server:
 rm-metrics-server:
 	helm delete metrics -n kube-system 
 
-
 ingress:
+	kubectl delete -A ValidatingWebhookConfiguration ingress-nginx-admission
 	kubectl apply -f ingress/kd.yml
 	kubectl apply -f ingress/dapr-dashboard.yml
 	kubectl apply -f ingress/imagegallery.yml
@@ -270,7 +273,12 @@ ef-update:
 	cd ../Marvin.IDP && dotnet ef database update
 	cd ../ImageGallery.API && dotnet ef database update
 
+# https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+nginx-kind:
+	kubectl apply -f ingress/nginx-controller-kind-v1.7.0.yml
 
+rm-nginx-kind:
+	kubectl delete -f ingress/nginx-controller-kind-v1.7.0.yml
 
 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/cloud/deploy.yaml
 nginx:

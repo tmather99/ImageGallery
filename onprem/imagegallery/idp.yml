@@ -21,7 +21,7 @@ spec:
         dapr.io/metrics-port: "9090"        
     spec:      
       hostAliases:
-      - ip: "10.62.35.13"
+      - ip: "10.62.34.119"
         hostnames:
         - "idp.imagegallery.com"
         - "api.imagegallery.com"
@@ -29,8 +29,8 @@ spec:
         - "client.imagegallery.com"
       volumes:
       - name: https-volume
-        persistentVolumeClaim:
-          claimName: pvc-https
+        hostPath:
+          path: /https
       containers:
       - name: imagegallery-idp
         volumeMounts:
@@ -64,10 +64,8 @@ metadata:
 spec:
   selector:
     app: imagegallery-idp-app  
-  type: ClusterIP  
-  externalIPs:
-    - 10.62.35.13
   ports:
     - protocol: TCP 
-      port: 5001
-      targetPort: 443
+      port: 443
+      nodePort: 30000
+  type: NodePort
