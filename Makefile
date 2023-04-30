@@ -78,7 +78,6 @@ rabbitmq:
 rm-rabbitmq:
 	docker compose stop rabbitmq
 
-
 # dotnet tool install --global dotnet-ef
 ef-update:
 	cd ./Marvin.IDP && dotnet ef database update

@@ -3,7 +3,8 @@ REPO = harbor-repo.vmware.com/jedi/imagegallery
 CERT_TLS = local-tls.yml
 
 .PHONY: ingress sql
-	#
+
+#
 # cluster targets
 #
 cluster:
