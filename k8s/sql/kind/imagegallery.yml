@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: globosql
+spec:
+  selector:
+    matchLabels:
+      app: globosql
+  replicas: 1  
+  template:
+    metadata:
+      labels:
+        app: globosql
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+      - name: globosql
+        image: tmather99/imagegallery-sql:v1
+        ports:
+        - containerPort: 1433 
+        env:
+        - name: ACCEPT_EULA
+          value: "Y"        
+        - name: SA_PASSWORD
+          value: "Th@nhy99"  
+        resources:
+          limits:
+            memory: "2048Mi"
+            cpu: "2048m"  
+---               
+apiVersion: v1
+kind: Service
+metadata:
+  name: globosql-service
+spec:
+  selector:
+    app: globosql
+  ports:
+    - protocol: TCP
+      port: 1433
+      nodePort: 31433
+  type: NodePort
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: globosql
+spec:
+  selector:
+    app: globosql
+  ports:
+    - protocol: TCP
+      port: 1433
+      targetPort: 1433
+  type: ClusterIP

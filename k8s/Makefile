@@ -73,7 +73,7 @@ login:
 init: \
 	ns \
 	helm-repos \
-	nginx
+	nginx-kind
 
 ns:	
 	kubectl apply -f namespaces/dapr-system.yml
@@ -186,16 +186,16 @@ rm-dapr: rm-dapr-statestore \
 	     rm-dapr-tracing
 
 idp:
-	kubectl apply -f imagegallery/idp.yml
+	kubectl apply -f imagegallery/kind/idp.yml
 
 rm-idp:
-	-kubectl delete -f imagegallery/idp.yml
+	-kubectl delete -f imagegallery/kind/idp.yml
 
 api:
-	kubectl apply -f imagegallery/api.yml
+	kubectl apply -f imagegallery/kind/api.yml
 
 rm-api:
-	-kubectl delete -f imagegallery/api.yml
+	-kubectl delete -f imagegallery/kind/api.yml
 
 # make scale-api REPLICAS=2
 REPLICAS = 1
@@ -204,16 +204,16 @@ scale-api:
 	kubectl scale deployment imagegallery-api-app --replicas=$(REPLICAS)
 
 client:
-	kubectl apply -f imagegallery/client.yml
+	kubectl apply -f imagegallery/kind/client.yml
 
 rm-client:
-	-kubectl delete -f imagegallery/client.yml
+	-kubectl delete -f imagegallery/kind/client.yml
 
 sql:
-	kubectl apply -f sql/imagegallery.yml
+	kubectl apply -f sql/kind/imagegallery.yml
 
 rm-sql:
-	-kubectl delete -f sql/imagegallery.yml
+	-kubectl delete -f sql/kind/imagegallery.yml
 
 sqlpad:
 	kubectl apply -f sql/sqlpad.yml

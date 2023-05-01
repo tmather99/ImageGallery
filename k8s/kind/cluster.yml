@@ -15,3 +15,15 @@ nodes:
   - containerPort: 443
     hostPort: 443
     protocol: TCP
+  - containerPort: 31433
+    hostPort: 1433
+  - containerPort: 30000
+    hostPort: 5001
+  - containerPort: 30001
+    hostPort: 7075
+  - containerPort: 30002
+    hostPort: 7184
+  extraMounts:
+  - hostPath: C:/github/ImageGallery/https
+    containerPath: /https
+    readOnly: true

@@ -1,0 +1,72 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imagegallery-client-app
+spec:
+  selector:
+    matchLabels:
+      app: imagegallery-client-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: imagegallery-client-app
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "imagegallery-client"
+        dapr.io/app-port: "443"
+        dapr.io/app-ssl: "true"
+        dapr.io/config: "tracing"
+        dapr.io/enable-metrics: "true"
+        dapr.io/metrics-port: "9090"        
+    spec:      
+      hostAliases:
+      - ip: "192.168.1.234"
+        hostnames:
+        - "idp.imagegallery.com"
+        - "api.imagegallery.com"
+        - "sql.imagegallery.com"
+        - "client.imagegallery.com"
+      volumes:
+        - name: https-volume
+          hostPath:
+            path: /https
+      containers:
+      - name: imagegallery-client
+        volumeMounts:
+          - mountPath: /https
+            name: https-volume
+        image: tmather99/imagegallery-client:v1
+        ports:
+        - containerPort: 443
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "200m"  
+        imagePullPolicy: Always
+        env:
+        - name: SEQ_SERVER_URL
+          value: "http://seq-service"        
+        - name: ASPNETCORE_URLS
+          value: "https://+:443"        
+        - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+          value: "Th@nhy99"
+        - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+          value: "/https/client-imagegallery.pfx"                
+        - name: ImageGalleryAPIRoot
+          value: "https://api.imagegallery.com:7075"
+        - name: IdpServerUri
+          value: "https://idp.imagegallery.com:5001"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: imagegallery-client-service
+spec:
+  selector:
+    app: imagegallery-client-app  
+  ports:
+    - protocol: TCP 
+      port: 443
+      nodePort: 30002
+  type: NodePort

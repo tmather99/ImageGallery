@@ -29,8 +29,7 @@ spec:
       volumes:
         - name: https-volume
           hostPath:
-            path: /run/desktop/mnt/host/c/github/ImageGallery/https
-            type: Directory
+            path: /https
       containers:
       - name: imagegallery-idp
         volumeMounts:
@@ -65,8 +64,8 @@ metadata:
 spec:
   selector:
     app: imagegallery-idp-app  
-  type: LoadBalancer  
   ports:
     - protocol: TCP 
-      port: 5001
-      targetPort: 443
+      port: 443
+      nodePort: 30000
+  type: NodePort
