@@ -21,7 +21,7 @@ spec:
         dapr.io/metrics-port: "9090"        
     spec:      
       hostAliases:
-      - ip: "192.168.1.234"
+      - ip: "10.62.34.114"
         hostnames:
         - "idp.imagegallery.com"
         - "api.imagegallery.com"

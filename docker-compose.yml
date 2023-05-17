@@ -13,7 +13,12 @@ services:
   idp-dapr:
     image: "daprio/daprd:edge"
     container_name: 'idp-dapr'
-    command: [ "./daprd", "--app-id", "idp", "--app-port", "443", "--placement-host-address", "placement:50006", "--components-path", "/components", "--app-ssl"  ]
+    command: [ "./daprd",
+               "--app-id", "idp",
+               "--app-port", "443",
+               "--placement-host-address", "placement:50006",
+               "--components-path", "/components",
+               "--app-ssl"  ]
     volumes:
         - ./components/:/components:ro
     depends_on:
@@ -32,7 +37,12 @@ services:
   api-dapr:
     image: "daprio/daprd:edge"
     container_name: 'api-dapr'
-    command: [ "./daprd", "--app-id", "api", "--app-port", "443", "--placement-host-address", "placement:50006", "--components-path", "/components", "--app-ssl" ]
+    command: [ "./daprd",
+               "--app-id", "api",
+               "--app-port", "443",
+               "--placement-host-address", "placement:50006",
+               "--components-path", "/components",
+               "--app-ssl" ]
     volumes:
         - ./components/:/components:ro
     depends_on:
@@ -51,7 +61,12 @@ services:
   client-dapr:
     image: "daprio/daprd:edge"
     container_name: 'client-dapr'
-    command: [ "./daprd", "--app-id", "client", "--app-port", "443", "--placement-host-address", "placement:50006", "--components-path", "/components", "--app-ssl" ]
+    command: [ "./daprd",
+               "--app-id", "client",
+               "--app-port", "443",
+               "--placement-host-address", "placement:50006",
+               "--components-path", "/components",
+               "--app-ssl" ]
     volumes:
         - ./components/:/components:ro
     depends_on:
