@@ -27,9 +27,10 @@ up:
 down:
 	docker compose down
 
+#	kubectl delete pvc --all 
+#	kubectl delete pv --all 
 clean:
-	kubectl delete pvc --all 
-	kubectl delete pv --all 
+	docker image  prune -a -f
 	docker system prune -f
 	docker volume prune -f
 

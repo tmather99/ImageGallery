@@ -25,10 +25,13 @@ use-context-onprem:
 context: use-context-desktop
 
 clean:
-	kubectl delete pvc --all 
-	kubectl delete pv --all 
+	docker image  prune -a -f
 	docker system prune -f
 	docker volume prune -f
+
+rm-pvc:
+	kubectl delete pvc --all 
+	kubectl delete pv --all 
 
 build-idp:
 	kubectl build -t $(REPO)-idp:$(TAG) -f ../Marvin.IDP/Dockerfile ..
@@ -48,6 +51,7 @@ build: \
 	build-client \
 	build-mssql
 
+# https://github.com/vmware-tanzu/buildkit-cli-for-kubectl
 push-idp:
 	kubectl build --push --registry-secret mysecret -t $(REPO)-idp:$(TAG) -f ../Marvin.IDP/Dockerfile ..
 
@@ -73,7 +77,8 @@ login:
 init: \
 	ns \
 	helm-repos \
-	nginx-kind
+	nginx-kind \
+	metrics-server
 
 ns:	
 	kubectl apply -f namespaces/dapr-system.yml
@@ -94,6 +99,13 @@ helm-repos:
 	helm repo add kubernetes-dashboard https://kubernetes.github.io/dashboard/
 	helm repo add dapr https://dapr.github.io/helm-charts/
 	helm repo update
+
+metrics-server:
+	helm upgrade --install --set 'args={--kubelet-insecure-tls}' \
+	             -n kube-system metrics metrics-server/metrics-server
+
+rm-metrics-server:
+	helm delete metrics -n kube-system 
 
 kd-install:
 	helm install kd kubernetes-dashboard/kubernetes-dashboard -n kubernetes-dashboard
@@ -117,7 +129,7 @@ rm-zipkin: rm-dapr-tracing
 	-kubectl delete -f utils/zipkin.yml
 
 redis:
-	helm install redis bitnami/redis
+	helm upgrade --install redis bitnami/redis --set architecture=standalone --create-namespace
 
 rm-redis:
 	-helm delete redis	
@@ -130,7 +142,7 @@ rm-redis-commander:
 
 rabbitmq:
 	helm install rabbitmq \
-	--set auth.username=admin,auth.password=admin,auth.erlangCookie=secretcookie,replicaCount=3 \
+	--set auth.username=admin,auth.password=admin,auth.erlangCookie=secretcookie,replicaCount=1 \
 	bitnami/rabbitmq
 	
 rm-rabbitmq:
@@ -154,10 +166,16 @@ rm-ingress:
 	-kubectl delete -f ingress/api.yml
 
 dapr-install:	
-	helm upgrade --install dapr dapr/dapr --version=1.9.6 --namespace dapr-system --create-namespace --wait
+	helm upgrade --install dapr dapr/dapr --version=1.12.0 --namespace dapr-system --create-namespace --wait
 
 dapr-uninstall:
 	-helm uninstall dapr --namespace dapr-system
+
+dapr-dashboard-install:
+	helm upgrade --install dapr-dashboard dapr/dapr-dashboard -n dapr-system --wait
+
+dapr-dashboard-uninstall:
+	helm uninstall dapr-dashboard -n dapr-system
 
 dapr-statestore:
 	kubectl apply -f dapr/statestore.yml
@@ -244,17 +262,17 @@ ef-update:
 
 # https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 nginx-kind:
-	kubectl apply -f ingress/nginx-controller-kind-v1.7.0.yml
+	kubectl apply -f ingress/nginx-controller-kind-v1.9.3.yml
 
 rm-nginx-kind:
-	kubectl delete -f ingress/nginx-controller-kind-v1.7.0.yml
+	kubectl delete -f ingress/nginx-controller-kind-v1.9.3.yml
 
 # kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.4.0/deploy/static/provider/cloud/deploy.yaml
 nginx:
-	kubectl apply -f ingress/nginx-controller-v1.7.0.yml
+	kubectl apply -f ingress/nginx-controller-v1.9.3.yml
 
 rm-nginx:
-	-kubectl delete -f ingress/nginx-controller-v1.7.0.yml
+	-kubectl delete -f ingress/nginx-controller-v1.9.3.yml
 
 # kubectl create secret tls imagegallery-api-local-tls --key="../https/api-imagegallery.key" --cert="../https/api-imagegallery.crt" --dry-run=client -o yaml
 apps-secrets:
