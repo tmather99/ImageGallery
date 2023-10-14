@@ -60,12 +60,12 @@ public static class Config
                 RedirectUris =
                 {
                     redirectUris
-                    //"https://client.imagegallery.com:7184/signin-oidc"
+                    //"https://client.assistdevtest.com:7184/signin-oidc"
                 },
                 PostLogoutRedirectUris =
                 {
                     postLogoutRedirectUris
-                    //"https://client.imagegallery.com:7184/signout-callback-oidc"
+                    //"https://client.assistdevtest.com:7184/signout-callback-oidc"
                 },
                 AllowedScopes =
                 {

@@ -21,7 +21,7 @@ services:
   bindings:
     - port: 5001
       protocol: https
-      host: idp.imagegallery.com
+      host: idp.assistdevtest.com
   volumes:
     - source: ./https
       target: /https:ro
@@ -40,7 +40,7 @@ services:
   bindings:
     - port: 7075
       protocol: https
-      host: api.imagegallery.com
+      host: api.assistdevtest.com
   volumes:
     - source: ./https
       target: /https:ro
@@ -59,7 +59,7 @@ services:
   bindings:
     - port: 7184
       protocol: https
-      host: client.imagegallery.com
+      host: client.assistdevtest.com
   volumes:
     - source: ./https
       target: /https:ro

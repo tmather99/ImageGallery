@@ -20,12 +20,12 @@ spec:
         dapr.io/metrics-port: "9090"        
     spec:      
       hostAliases:
-      - ip: "10.62.34.114"
+      - ip: "10.62.34.61"
         hostnames:
-        - "idp.imagegallery.com"
-        - "api.imagegallery.com"
-        - "sql.imagegallery.com"
-        - "client.imagegallery.com"
+        - "idp.assistdevtest.com"
+        - "api.assistdevtest.com"
+        - "sql.assistdevtest.com"
+        - "client.assistdevtest.com"
       volumes:
         - name: https-volume
           hostPath:
@@ -35,7 +35,7 @@ spec:
         volumeMounts:
           - mountPath: /https
             name: https-volume
-        image: tmather99/imagegallery-idp:v1
+        image: tmather99/imagegallery-idp:v3
         ports:
         - containerPort: 443
         resources:
@@ -49,13 +49,13 @@ spec:
           - name: ASPNETCORE_URLS
             value: "https://+:443"        
           - name: ASPNETCORE_Kestrel__Certificates__Default__Password
-            value: "Th@nhy99"
+            value: "Assist@1"
           - name: ASPNETCORE_Kestrel__Certificates__Default__Path
-            value: "/https/idp-imagegallery.pfx"        
+            value: "/https/assistdevtest-com.pfx"        
           - name: Client__RedirectUris
-            value: "https://client.imagegallery.com:7184/signin-oidc"
+            value: "https://client.assistdevtest.com:7184/signin-oidc"
           - name: Client__PostLogoutRedirectUris
-            value: "https://client.imagegallery.com:7184/signout-callback-oidc"
+            value: "https://client.assistdevtest.com:7184/signout-callback-oidc"
 ---
 apiVersion: v1
 kind: Service

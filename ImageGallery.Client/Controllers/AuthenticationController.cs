@@ -76,7 +76,7 @@ namespace ImageGallery.Client.Controllers
             var apiClient = new HttpClient();
             apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-            var response = await apiClient.GetAsync("https://api.imagegallery.com:7075/api/images");
+            var response = await apiClient.GetAsync("https://api.assistdevtest.com:7075/api/images");
             if (!response.IsSuccessStatusCode)
             {
                 this.logger.LogError(response.StatusCode.ToString());

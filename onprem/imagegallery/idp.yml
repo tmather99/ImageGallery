@@ -23,10 +23,10 @@ spec:
       hostAliases:
       - ip: "10.62.34.119"
         hostnames:
-        - "idp.imagegallery.com"
-        - "api.imagegallery.com"
-        - "sql.imagegallery.com"
-        - "client.imagegallery.com"
+        - "idp.assistdevtest.com"
+        - "api.assistdevtest.com"
+        - "sql.assistdevtest.com"
+        - "client.assistdevtest.com"
       volumes:
       - name: https-volume
         hostPath:
@@ -53,9 +53,9 @@ spec:
           - name: ASPNETCORE_Kestrel__Certificates__Default__Path
             value: "/https/idp-imagegallery.pfx"        
           - name: Client__RedirectUris
-            value: "https://client.imagegallery.com:7184/signin-oidc"
+            value: "https://client.assistdevtest.com:7184/signin-oidc"
           - name: Client__PostLogoutRedirectUris
-            value: "https://client.imagegallery.com:7184/signout-callback-oidc"
+            value: "https://client.assistdevtest.com:7184/signout-callback-oidc"
 ---
 apiVersion: v1
 kind: Service

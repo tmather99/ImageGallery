@@ -92,7 +92,7 @@ services:
     networks:
       - network
     extra_hosts:
-      - "sql.imagegallery.com: ${SQL_SERVER}"
+      - "sql.assistdevtest.com: ${SQL_SERVER}"
 
   redis-commander:
     image: rediscommander/redis-commander

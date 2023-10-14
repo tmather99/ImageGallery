@@ -6,7 +6,7 @@
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "onebox"
             },
-            "applicationUrl": "https://idp.imagegallery.com:5001"
+            "applicationUrl": "https://idp.assistdevtest.com:5001"
         }
     }
 }

@@ -8,7 +8,7 @@ var deviceUdid = args.Length == 0 ? Guid.NewGuid().ToString() : args[0];
 var deviceClient = new HttpClient();
 
 var resp = await deviceClient.PostAsync(
-    "https://api.imagegallery.com:7075/api/device/enroll",
+    "https://api.assistdevtest.com:7075/api/device/enroll",
     new FormUrlEncodedContent(
         new Dictionary<string, string>()
         {
@@ -23,7 +23,7 @@ Console.WriteLine($"  deviceUdid: {deviceUdid}\n" +
                   $" sharedSeret: {sharedSecret}\n");
 
 // discover endpoints from metadata
-var disco = await deviceClient.GetDiscoveryDocumentAsync("https://idp.imagegallery.com:5001");
+var disco = await deviceClient.GetDiscoveryDocumentAsync("https://idp.assistdevtest.com:5001");
 if (disco.IsError)
 {
     Console.WriteLine(disco.Error);
@@ -59,7 +59,7 @@ foreach (var claim in jwt.Claims)
 var apiClient = new HttpClient();
 apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-var response = await apiClient.GetAsync("https://api.imagegallery.com:7075/api/images");
+var response = await apiClient.GetAsync("https://api.assistdevtest.com:7075/api/images");
 if (!response.IsSuccessStatusCode)
 {
     Console.WriteLine(response.StatusCode);
@@ -104,7 +104,7 @@ foreach (var claim in jwt.Claims)
 apiClient = new HttpClient();
 apiClient.SetBearerToken(tokenResponse.AccessToken);
 
-response = await apiClient.GetAsync("https://api.imagegallery.com:7075/api/images");
+response = await apiClient.GetAsync("https://api.assistdevtest.com:7075/api/images");
 if (!response.IsSuccessStatusCode)
 {
     Console.WriteLine(response.StatusCode);

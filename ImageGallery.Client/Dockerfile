@@ -3,12 +3,8 @@ WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-COPY ./https/idp-imagegallery.crt /usr/share/ca-certificates
-RUN echo idp-imagegallery.crt >> /etc/ca-certificates.conf
-RUN update-ca-certificates
-
-COPY ./https/api-imagegallery.crt /usr/share/ca-certificates
-RUN echo api-imagegallery.crt >> /etc/ca-certificates.conf
+COPY ./https/fullchain2.pem /usr/share/ca-certificates/assistdevtest.crt
+RUN echo assistdevtest.crt >> /etc/ca-certificates.conf
 RUN update-ca-certificates
 
 FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build

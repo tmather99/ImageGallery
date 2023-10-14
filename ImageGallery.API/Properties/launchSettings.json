@@ -5,7 +5,7 @@
             "environmentVariables": {
                 "ASPNETCORE_ENVIRONMENT": "onebox"
             },
-            "applicationUrl": "https://api.imagegallery.com:7075",
+            "applicationUrl": "https://api.assistdevtest.com:7075",
             "dotnetRunMessages": true
         }
     }

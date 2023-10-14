@@ -14,10 +14,10 @@ services:
     networks:
       - network
     extra_hosts:
-      - "idp.imagegallery.com: ${IDP_SERVER}"
-      - "api.imagegallery.com: ${API_SERVER}"
-      - "sql.imagegallery.com: ${SQL_SERVER}"
-      - "client.imagegallery.com: ${CLIENT_SERVER}"
+      - "idp.assistdevtest.com: ${IDP_SERVER}"
+      - "api.assistdevtest.com: ${API_SERVER}"
+      - "sql.assistdevtest.com: ${SQL_SERVER}"
+      - "client.assistdevtest.com: ${CLIENT_SERVER}"
 
   api:
     environment:
@@ -32,10 +32,10 @@ services:
     networks:
       - network
     extra_hosts:
-      - "idp.imagegallery.com: ${IDP_SERVER}"
-      - "api.imagegallery.com: ${API_SERVER}"
-      - "sql.imagegallery.com: ${SQL_SERVER}"
-      - "client.imagegallery.com: ${CLIENT_SERVER}"
+      - "idp.assistdevtest.com: ${IDP_SERVER}"
+      - "api.assistdevtest.com: ${API_SERVER}"
+      - "sql.assistdevtest.com: ${SQL_SERVER}"
+      - "client.assistdevtest.com: ${CLIENT_SERVER}"
 
   client:
     environment:
@@ -50,10 +50,10 @@ services:
     networks:
       - network
     extra_hosts:
-      - "idp.imagegallery.com: ${IDP_SERVER}"
-      - "api.imagegallery.com: ${API_SERVER}"
-      - "sql.imagegallery.com: ${SQL_SERVER}"
-      - "client.imagegallery.com: ${CLIENT_SERVER}"
+      - "idp.assistdevtest.com: ${IDP_SERVER}"
+      - "api.assistdevtest.com: ${API_SERVER}"
+      - "sql.assistdevtest.com: ${SQL_SERVER}"
+      - "client.assistdevtest.com: ${CLIENT_SERVER}"
 
   globosql:
     environment:      
