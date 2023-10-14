@@ -52,7 +52,7 @@ spec:
         - name: ASPNETCORE_Kestrel__Certificates__Default__Password
           value: "Assist@1"
         - name: ASPNETCORE_Kestrel__Certificates__Default__Path
-          value: "/https/assistdevtest-com.pfx"        
+          value: "/app/assistdevtest-com.pfx"        
         - name: ImageGalleryAPIRoot
           value: "https://api.assistdevtest.com:7075"
         - name: IdpServerUri

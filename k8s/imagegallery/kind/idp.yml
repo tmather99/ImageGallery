@@ -51,7 +51,7 @@ spec:
           - name: ASPNETCORE_Kestrel__Certificates__Default__Password
             value: "Assist@1"
           - name: ASPNETCORE_Kestrel__Certificates__Default__Path
-            value: "/https/assistdevtest-com.pfx"        
+            value: "/app/assistdevtest-com.pfx"        
           - name: Client__RedirectUris
             value: "https://client.assistdevtest.com:7184/signin-oidc"
           - name: Client__PostLogoutRedirectUris

@@ -15,7 +15,7 @@ spec:
       terminationGracePeriodSeconds: 10
       containers:
       - name: globosql
-        image: tmather99/imagegallery-sql:v1
+        image: tmather99/imagegallery-sql:v3
         ports:
         - containerPort: 1433 
         env:
