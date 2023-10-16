@@ -1,4 +1,3 @@
-using Duende.IdentityServer.Validation;
 using Marvin.IDP.DbContexts;
 using Marvin.IDP.Services;
 using Microsoft.AspNetCore.HttpOverrides;
@@ -51,7 +50,9 @@ internal static class HostingExtensions
     public static WebApplication ConfigurePipeline(this WebApplication app)
     {
         app.UseSerilogRequestLogging();
-    
+
+        app.UseForwardedHeaders();
+
         if (app.Environment.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();

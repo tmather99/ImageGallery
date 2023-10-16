@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.HttpLogging;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Logging;
 using Microsoft.Net.Http.Headers;
 using Serilog;
@@ -35,6 +36,12 @@ try
 
     Log.Information($"IdpServerUri = " + idpServerUri);
     Log.Information($"ImageGalleryAPIRoot = " + imageGalleryAPIRoot);
+
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    });
 
     // Add services to the container.
     builder.Services.AddControllersWithViews()

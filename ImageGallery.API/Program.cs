@@ -5,6 +5,7 @@ using ImageGallery.API.Services;
 using ImageGallery.Authorization;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -24,6 +25,12 @@ try
         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
         .Enrich.FromLogContext()
         .ReadFrom.Configuration(ctx.Configuration));
+
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    });
 
     // Add services to the container.
     builder.Services.AddHttpClient();
@@ -100,6 +107,7 @@ try
 
     var app = builder.Build();
 
+    app.UseForwardedHeaders();
     app.UseSwagger();
     app.UseSwaggerUI();
 

@@ -1,4 +1,5 @@
 ﻿using Marvin.IDP;
+using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
@@ -15,6 +16,12 @@ try
         .WriteTo.Console(outputTemplate: "[{Timestamp:HH:mm:ss} {Level}] {SourceContext}{NewLine}{Message:lj}{NewLine}{Exception}{NewLine}")
         .Enrich.FromLogContext()
         .ReadFrom.Configuration(ctx.Configuration));
+
+    builder.Services.Configure<ForwardedHeadersOptions>(options =>
+    {
+        options.ForwardedHeaders =
+            ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
+    });
 
     // Add services to the container.
     builder.Services.AddHttpClient();
