@@ -17,12 +17,6 @@ try
         .Enrich.FromLogContext()
         .ReadFrom.Configuration(ctx.Configuration));
 
-    builder.Services.Configure<ForwardedHeadersOptions>(options =>
-    {
-        options.ForwardedHeaders =
-            ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto;
-    });
-
     // Add services to the container.
     builder.Services.AddHttpClient();
     builder.Services.AddControllers().AddDapr();
