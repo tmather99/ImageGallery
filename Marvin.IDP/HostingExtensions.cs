@@ -27,17 +27,23 @@ internal static class HostingExtensions
             options.UseSqlServer(connectionString);
         });
 
+        builder.Services.AddStackExchangeRedisCache(option =>
+        {
+            option.Configuration = builder.Configuration["ConnectionStrings:DistributedCache"];
+            option.InstanceName = "Redis";
+        });
+
         builder.Services.AddIdentityServer(options =>
-            {
-                // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
-                options.EmitStaticAudienceClaim = true;
-            })
-            .AddProfileService<LocalUserProfileService>()
-            .AddInMemoryIdentityResources(Config.IdentityResources)
-            .AddInMemoryApiScopes(Config.ApiScopes)
-            .AddInMemoryApiResources(Config.ApiResources)
-            .AddResourceOwnerValidator<MyResourceOwnerPasswordValidator>()
-            .AddMyInMemoryClients(builder.ConfigClients());
+        {
+            // https://docs.duendesoftware.com/identityserver/v6/fundamentals/resources/api_scopes#authorization-based-on-scopes
+            options.EmitStaticAudienceClaim = true;
+        })
+        .AddProfileService<LocalUserProfileService>()
+        .AddInMemoryIdentityResources(Config.IdentityResources)
+        .AddInMemoryApiScopes(Config.ApiScopes)
+        .AddInMemoryApiResources(Config.ApiResources)
+        .AddResourceOwnerValidator<MyResourceOwnerPasswordValidator>()
+        .AddMyInMemoryClients(builder.ConfigClients());
 
         builder.Services.Configure<ForwardedHeadersOptions>(options =>
         {

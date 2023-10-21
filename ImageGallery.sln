@@ -17,14 +17,7 @@ Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-co
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "k8s", "k8s", "{75D1130A-C3D2-4756-BFFB-B2DE4CB31519}"
 	ProjectSection(SolutionItems) = preProject
-		k8s\imagegallery-api.yml = k8s\imagegallery-api.yml
-		k8s\imagegallery-client.yml = k8s\imagegallery-client.yml
-		k8s\imagegallery-idp.yml = k8s\imagegallery-idp.yml
-		k8s\imagegallery-ingress.yml = k8s\imagegallery-ingress.yml
-		k8s\kd-ingress.yml = k8s\kd-ingress.yml
 		k8s\Makefile = k8s\Makefile
-		k8s\seq.yml = k8s\seq.yml
-		k8s\zipkin.yml = k8s\zipkin.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mssql", "mssql", "{AB63C436-FC19-411B-B59F-292F927B5F4D}"
@@ -98,7 +91,6 @@ Global
 		{2DA5F029-5FAA-469C-8C1F-873B04296E65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DA5F029-5FAA-469C-8C1F-873B04296E65}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D5A4A5B9-5137-4EE3-94E4-62E94767F43D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D5A4A5B9-5137-4EE3-94E4-62E94767F43D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5A4A5B9-5137-4EE3-94E4-62E94767F43D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D5A4A5B9-5137-4EE3-94E4-62E94767F43D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{09284838-04F1-4DD5-A4E9-65ECFF5997B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

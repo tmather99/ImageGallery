@@ -1,5 +1,5 @@
 REPO = tmather99
-VERSION = v3
+VERSION = v5
 
 PROJS = idp \
         api \
@@ -18,7 +18,7 @@ enroll:
 tag:
 	$(foreach proj,$(PROJS),docker tag imagegallery-$(proj):$(VERSION) $(REPO)/imagegallery-$(proj):$(VERSION) &)
 
-push:
+push: tag
 	$(foreach proj,$(PROJS),docker push $(REPO)/imagegallery-$(proj):$(VERSION) &)
 
 up:
