@@ -56,11 +56,7 @@ internal static class HostingExtensions
         var redisConnectionString = builder.Configuration["ConnectionStrings:DistributedCache"];
         var connectionMultiplexer = ConnectionMultiplexer.Connect(redisConnectionString);
 
-        builder.Services.AddStackExchangeRedisCache(option =>
-        {
-            option.Configuration = redisConnectionString;
-            option.InstanceName = "Redis";
-        });
+        Log.Information($"redisConnectionString = " + redisConnectionString);
 
         builder.Services.AddDataProtection()
             .PersistKeysToStackExchangeRedis(connectionMultiplexer, "DataProtection-Keys")

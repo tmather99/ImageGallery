@@ -1,5 +1,4 @@
 ﻿using Marvin.IDP;
-using Microsoft.AspNetCore.HttpOverrides;
 using Serilog;
 
 Log.Logger = new LoggerConfiguration()
