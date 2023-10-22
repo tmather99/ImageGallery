@@ -46,5 +46,6 @@ dapr-run:
                  -- dotnet run -c Release --urls https://idp.assistdevtest.com:5001
 
 ef-update:
-	dotnet ef database update
+	dotnet ef database update --context IdentityDbContext
+	dotnet ef database update --context PersistedGrantDbContext
 	

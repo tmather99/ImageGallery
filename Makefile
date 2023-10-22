@@ -81,7 +81,8 @@ rm-rabbitmq:
 
 # dotnet tool install --global dotnet-ef
 ef-update:
-	cd ./Marvin.IDP && dotnet ef database update
+	cd ./Marvin.IDP && dotnet ef database update --context IdentityDbContext
+	cd ./Marvin.IDP && dotnet ef database update --context PersistedGrantDbContext
 	cd ./ImageGallery.API && dotnet ef database update
 
 dapr-sidecar: 
