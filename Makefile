@@ -1,5 +1,5 @@
 REPO = tmather99
-VERSION = v5
+VERSION = v6
 
 PROJS = idp \
         api \
@@ -8,6 +8,9 @@ PROJS = idp \
         
 build:
 	docker compose build
+
+build-idp:
+	docker compose build idp
 
 build-device:
 	cd DeviceClient && dotnet build

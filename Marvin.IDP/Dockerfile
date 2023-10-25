@@ -1,16 +1,11 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
-FROM mcr.microsoft.com/dotnet/aspnet:7.0 AS base
+FROM harbor-repo.vmware.com/jedi/photon-dotnet/aspnet:7.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-COPY ./https/assistdevtest-com.pfx .
-COPY ./https/fullchain2.pem /usr/share/ca-certificates/assistdevtest.crt
-RUN echo assistdevtest.crt >> /etc/ca-certificates.conf
-RUN update-ca-certificates
-
-FROM mcr.microsoft.com/dotnet/sdk:7.0 AS build
+FROM harbor-repo.vmware.com/jedi/photon-dotnet/sdk:all-current-sdks AS build
 WORKDIR /src
 COPY ["Marvin.IDP/Marvin.IDP.csproj", "Marvin.IDP/"]
 RUN dotnet restore "Marvin.IDP/Marvin.IDP.csproj"
