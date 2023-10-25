@@ -19,12 +19,12 @@
 	<ItemGroup>
 		<PackageReference Include="Duende.IdentityServer" Version="6.3.5" />
 		<PackageReference Include="IdentityModel.AspNetCore.OAuth2Introspection" Version="6.2.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.5" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.13" />
 
 		<PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.12" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.13" />
 		<!-- <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2" /> -->
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.12">
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.13">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
