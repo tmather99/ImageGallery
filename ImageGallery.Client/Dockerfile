@@ -1,4 +1,4 @@
-FROM harbor-repo.vmware.com/jedi/photon-dotnet/aspnet:7.0 AS base
+FROM harbor-repo.vmware.com/jedi/photon-dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
