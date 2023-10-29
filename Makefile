@@ -1,5 +1,5 @@
 REPO = tmather99
-VERSION = v6
+VERSION = v7
 
 PROJS = idp \
         api \
@@ -16,7 +16,11 @@ build-device:
 	cd DeviceClient && dotnet build
 
 enroll:
+ifeq ($(OS),Windows_NT)
 	.\DeviceClient\bin\Debug\net7.0\DeviceClient.exe
+else
+	./DeviceClient/bin/Debug/net7.0/DeviceClient
+endif
 
 tag:
 	$(foreach proj,$(PROJS),docker tag imagegallery-$(proj):$(VERSION) $(REPO)/imagegallery-$(proj):$(VERSION) &)
