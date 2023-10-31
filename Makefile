@@ -17,9 +17,9 @@ build-device:
 
 enroll:
 ifeq ($(OS),Windows_NT)
-	.\DeviceClient\bin\Debug\net7.0\DeviceClient.exe
+	.\DeviceClient\bin\Debug\net8.0\DeviceClient.exe
 else
-	./DeviceClient/bin/Debug/net7.0/DeviceClient
+	./DeviceClient/bin/Debug/net8.0/DeviceClient
 endif
 
 tag:
