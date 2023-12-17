@@ -1,9 +1,9 @@
-FROM harbor-repo.vmware.com/jedi/photon-dotnet/aspnet:8.0 AS base
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
 WORKDIR /app
 EXPOSE 80
 EXPOSE 443
 
-FROM harbor-repo.vmware.com/jedi/photon-dotnet/sdk:all-current-sdks AS build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
 COPY ["ImageGallery.Client/ImageGallery.Client.csproj", "ImageGallery.Client/"]
 COPY ["ImageGallery.Authorization/ImageGallery.Authorization.csproj", "ImageGallery.Authorization/"]

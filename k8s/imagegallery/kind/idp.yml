@@ -20,7 +20,7 @@ spec:
         dapr.io/metrics-port: "9090"        
     spec:      
       hostAliases:
-      - ip: "10.62.34.61"
+      - ip: "10.62.34.250"
         hostnames:
         - "idp.assistdevtest.com"
         - "api.assistdevtest.com"
