@@ -22,11 +22,41 @@ else
 	./DeviceClient/bin/Debug/net8.0/DeviceClient
 endif
 
-tag:
-	$(foreach proj,$(PROJS),docker tag imagegallery-$(proj):$(VERSION) $(REPO)/imagegallery-$(proj):$(VERSION) &)
+tag-idp:
+	docker tag imagegallery-idp:$(VERSION) $(REPO)/imagegallery-idp:$(VERSION)
 
-push: tag
-	$(foreach proj,$(PROJS),docker push $(REPO)/imagegallery-$(proj):$(VERSION) &)
+tag-api:
+	docker tag imagegallery-api:$(VERSION) $(REPO)/imagegallery-api:$(VERSION)
+
+tag-client:
+	docker tag imagegallery-client:$(VERSION) $(REPO)/imagegallery-client:$(VERSION)
+
+tag-sql:
+	docker tag imagegallery-sql:$(VERSION) $(REPO)/imagegallery-sql:$(VERSION)
+
+tag: \
+	tag-idp \
+	tag-api \
+	tag-client \
+	tag-sql
+
+push-idp:
+	docker push $(REPO)/imagegallery-idp:$(VERSION)
+
+push-api:
+	docker push $(REPO)/imagegallery-api:$(VERSION)
+
+push-client:
+	docker push $(REPO)/imagegallery-client:$(VERSION)
+
+push-sql:
+	docker push $(REPO)/imagegallery-sql:$(VERSION)
+
+push: tag \
+	push-idp \
+	push-api \
+	push-client \
+	push-sql
 
 up:
 	docker compose up
