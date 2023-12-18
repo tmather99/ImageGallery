@@ -34,25 +34,19 @@ tag-client:
 tag-sql:
 	docker tag imagegallery-sql:$(VERSION) $(REPO)/imagegallery-sql:$(VERSION)
 
-tag: \
-	tag-idp \
-	tag-api \
-	tag-client \
-	tag-sql
-
-push-idp:
+push-idp: tag-idp
 	docker push $(REPO)/imagegallery-idp:$(VERSION)
 
-push-api:
+push-api: tag-api
 	docker push $(REPO)/imagegallery-api:$(VERSION)
 
-push-client:
+push-client: tag-client
 	docker push $(REPO)/imagegallery-client:$(VERSION)
 
-push-sql:
+push-sql: tag-sql
 	docker push $(REPO)/imagegallery-sql:$(VERSION)
 
-push: tag \
+push: \
 	push-idp \
 	push-api \
 	push-client \
