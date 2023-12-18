@@ -3,8 +3,8 @@ VERSION = v9
 
 PROJS = idp \
         api \
-		client \
-		sql
+        client \
+        sql
         
 build:
 	docker compose build
