@@ -25,5 +25,6 @@ jobs:
         /usr/local/bin/kind create cluster --name jedi-ci-cluster --config=k8s/kind/jedi-ci.yml
 
     - name: Cluster init
+      working-directory: ./k8s
       run: |
-        make -f k8s/Makefile init
+        make init
