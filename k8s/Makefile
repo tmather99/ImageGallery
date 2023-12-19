@@ -13,6 +13,12 @@ cluster:
 rm-cluster:
 	kind delete cluster --name cluster
 
+jedi-ci-cluster:
+	kind create cluster --name jedi-ci-cluster --config=kind/jedi-ci.yml
+
+rm-jedi-ci-cluster:
+	kind delete cluster --name jedi-ci-cluster
+
 get-contexts:
 	kubectl config get-contexts
 

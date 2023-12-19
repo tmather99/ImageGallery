@@ -17,8 +17,16 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_TOKEN }}
 
-    - name: build images
-      run: make build
+    - name: Delete cluster
+      run: /usr/local/bin/kind delete cluster --name jedi-ci-cluster
 
-    - name: push images
-      run: make push
+    - name: Create k8s Kind Cluster
+      run: |
+        /usr/local/bin/kind create cluster --name jedi-ci-cluster --config=k8s/kind/jedi-ci.yml
+
+    - name: Get Cluster status
+      run: |
+        # wait network is ready
+        kubectl wait --for=condition=ready pods --namespace=kube-system -l k8s-app=kube-dns
+        kubectl get nodes -o wide
+        kubectl get pods -A

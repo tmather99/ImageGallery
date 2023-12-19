@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: imagegallery-api-app
+spec:
+  selector:
+    matchLabels:
+      app: imagegallery-api-app
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: imagegallery-api-app
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "imagegallery-api"
+        dapr.io/app-port: "443"
+        dapr.io/app-ssl: "true"
+        dapr.io/config: "tracing"
+        dapr.io/enable-metrics: "true"
+        dapr.io/metrics-port: "9090" 
+    spec:      
+      volumes:
+      - name: pfx-volume
+        secret:
+          secretName: assistdevtest-com-pfx
+      containers:
+      - name: imagegallery-api
+        image: tmather99/imagegallery-api:v9
+        volumeMounts:
+        - name: pfx-volume
+          mountPath: /https
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "200m"  
+        imagePullPolicy: Always
+        env:
+        - name: SEQ_SERVER_URL
+          value: "http://seq-service"        
+        - name: ASPNETCORE_URLS
+          value: "https://+:443"        
+        - name: ASPNETCORE_Kestrel__Certificates__Default__Path
+          value: "/https/assistdevtest-com.pfx"        
+        - name: ASPNETCORE_Kestrel__Certificates__Default__Password
+          valueFrom:
+            secretKeyRef:
+              name: pfx-passwords
+              key: assistdevtest-com-pfx-password
+        - name: IdpServerUri
+          value: "https://idp.assistdevtest.com"
+        - name: ConnectionStrings__GlobomanticsDb
+          value: "Server=sql.assistdevtest.com;Database=Globomantics;User Id=sa;Password=AssistJedi2023;MultipleActiveResultSets=true;TrustServerCertificate=True"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: imagegallery-api-service
+spec:
+  selector:
+    app: imagegallery-api-app  
+  ports:
+    - protocol: TCP 
+      port: 443
+      targetPort: 443
+  type: ClusterIP
