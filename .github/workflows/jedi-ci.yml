@@ -22,7 +22,14 @@ jobs:
 
     - name: Create k8s Kind Cluster
       run: |
-        /usr/local/bin/kind create cluster --name jedi-ci-cluster --config=k8s/kind/jedi-ci.yml
+        /usr/local/bin/kind create cluster --name jedi-ci-cluster --config=k8s/kind/jedi-ci.yml --wait 1m
+
+    - name: Get Cluster status
+      run: |
+        # wait network is ready
+        kubectl wait --for=condition=ready pods --namespace=kube-system -l k8s-app=kube-dns
+        kubectl get nodes -o wide
+        kubectl get pods -A
 
     - name: Cluster init
       working-directory: ./k8s
